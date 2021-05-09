@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.Pane?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="252.0" layoutY="48.0" text="Ordenar" />
+      <Label layoutX="112.0" layoutY="131.0" text="Primero por" />
+      <Label layoutX="111.0" layoutY="192.0" text="Segundo por" />
+      <Label layoutX="112.0" layoutY="250.0" text="Tercero por" />
+      <RadioButton layoutX="208.0" layoutY="131.0" mnemonicParsing="false" text="Tipo" />
+      <RadioButton layoutX="291.0" layoutY="131.0" mnemonicParsing="false" text="Fecha" />
+      <RadioButton layoutX="369.0" layoutY="131.0" mnemonicParsing="false" text="Nombre" />
+      <RadioButton layoutX="210.0" layoutY="192.0" mnemonicParsing="false" text="Tipo" />
+      <RadioButton layoutX="291.0" layoutY="192.0" mnemonicParsing="false" text="Fecha" />
+      <RadioButton layoutX="369.0" layoutY="192.0" mnemonicParsing="false" text="Nombre" />
+      <RadioButton layoutX="208.0" layoutY="250.0" mnemonicParsing="false" text="Tipo" />
+      <RadioButton layoutX="291.0" layoutY="250.0" mnemonicParsing="false" text="Fecha" />
+      <RadioButton layoutX="369.0" layoutY="250.0" mnemonicParsing="false" text="Nombre" />
+      <RadioButton layoutX="455.0" layoutY="131.0" mnemonicParsing="false" text="Pog" />
+   </children>
+</Pane>
