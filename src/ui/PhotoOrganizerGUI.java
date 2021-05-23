@@ -16,6 +16,7 @@ public class PhotoOrganizerGUI {
     private Pane mainPane;
 	
 	public void loadMainPage(){
+		load("menu-page.fxml");
 	}
 	
 	@FXML
@@ -41,7 +42,7 @@ public class PhotoOrganizerGUI {
 
     @FXML
     void loadMenuPage(ActionEvent event) {
-    	load("main-page.fxml");
+    	load("menu-page.fxml");
     }
 	public void load(String  page) {
 		try {
