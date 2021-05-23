@@ -9,11 +9,11 @@
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="256.0" layoutY="41.0" text="Ordenar Carpeta" />
-      <Button layoutX="373.0" layoutY="116.0" mnemonicParsing="false" text="Enter" />
+      <Button layoutX="373.0" layoutY="116.0" mnemonicParsing="false" text="Browse" />
       <TextField layoutX="222.0" layoutY="116.0" prefHeight="25.0" prefWidth="153.0" />
       <Label layoutX="104.0" layoutY="120.0" text="Seleccione la carpeta" />
       <Button layoutX="385.0" layoutY="349.0" mnemonicParsing="false" text="Continuar" />
-      <Button layoutX="373.0" layoutY="175.0" mnemonicParsing="false" text="Personalizar" />
+      <Button layoutX="373.0" layoutY="175.0" mnemonicParsing="false" onAction="#loadCustomizePreferences" text="Personalizar" />
       <Label layoutX="215.0" layoutY="179.0" text="Se organizara por Fecha" />
       <CheckBox layoutX="218.0" layoutY="220.0" mnemonicParsing="false" text="Crear nuevas carpetas" />
       <CheckBox layoutX="218.0" layoutY="254.0" mnemonicParsing="false" text="Crear archivo cvs" />

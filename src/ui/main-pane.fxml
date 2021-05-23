@@ -5,29 +5,29 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="629.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="600.0">
+      <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="627.0">
         <menus>
           <Menu mnemonicParsing="false" text="Menu">
             <items>
-                  <MenuItem mnemonicParsing="false" text="Home" />
+                  <MenuItem mnemonicParsing="false" onAction="#loadMenuPage" text="Home" />
               <MenuItem mnemonicParsing="false" text="Back" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Backup">
             <items>
-              <MenuItem mnemonicParsing="false" text="Manage Folders" />
+              <MenuItem mnemonicParsing="false" onAction="#loadManageFolders" text="Manage Folders" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Folders">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#loadOrganizeFolder" text="Organize" />
-                  <MenuItem mnemonicParsing="false" text="Compare" />
+                  <MenuItem mnemonicParsing="false" onAction="#loadCompareFolders" text="Compare" />
             </items>
           </Menu>
         </menus>
       </MenuBar>
-      <Pane layoutY="27.0" prefHeight="374.0" prefWidth="600.0" />
+      <Pane fx:id="mainPane" layoutY="27.0" prefHeight="490.0" prefWidth="627.0" />
    </children>
 </Pane>

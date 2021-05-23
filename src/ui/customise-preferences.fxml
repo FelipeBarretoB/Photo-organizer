@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.layout.Pane?>
@@ -19,5 +20,6 @@
       <RadioButton layoutX="208.0" layoutY="250.0" mnemonicParsing="false" text="Tipo" />
       <RadioButton layoutX="291.0" layoutY="250.0" mnemonicParsing="false" text="Fecha" />
       <RadioButton layoutX="369.0" layoutY="250.0" mnemonicParsing="false" text="Nombre" />
+      <Button layoutX="271.0" layoutY="335.0" mnemonicParsing="false" onAction="#backToOrganizeFolder" text="Listo" />
    </children>
 </Pane>
