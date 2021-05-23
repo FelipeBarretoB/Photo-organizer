@@ -13,9 +13,10 @@
       <TextField layoutX="222.0" layoutY="116.0" prefHeight="25.0" prefWidth="153.0" />
       <Label layoutX="104.0" layoutY="120.0" text="Seleccione la carpeta" />
       <Button layoutX="385.0" layoutY="349.0" mnemonicParsing="false" text="Continuar" />
-      <Button layoutX="170.0" layoutY="349.0" mnemonicParsing="false" text="Volver" />
       <Button layoutX="373.0" layoutY="175.0" mnemonicParsing="false" text="Personalizar" />
       <Label layoutX="215.0" layoutY="179.0" text="Se organizara por Fecha" />
-      <CheckBox layoutX="220.0" layoutY="225.0" mnemonicParsing="false" text="Crear nuevas carpetas" />
+      <CheckBox layoutX="218.0" layoutY="220.0" mnemonicParsing="false" text="Crear nuevas carpetas" />
+      <CheckBox layoutX="218.0" layoutY="254.0" mnemonicParsing="false" text="Crear archivo cvs" />
+      <CheckBox layoutX="218.0" layoutY="293.0" mnemonicParsing="false" text="Eliminar archivos repetidos" />
    </children>
 </Pane>

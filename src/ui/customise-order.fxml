@@ -19,6 +19,5 @@
       <RadioButton layoutX="208.0" layoutY="250.0" mnemonicParsing="false" text="Tipo" />
       <RadioButton layoutX="291.0" layoutY="250.0" mnemonicParsing="false" text="Fecha" />
       <RadioButton layoutX="369.0" layoutY="250.0" mnemonicParsing="false" text="Nombre" />
-      <RadioButton layoutX="455.0" layoutY="131.0" mnemonicParsing="false" text="Pog" />
    </children>
 </Pane>
