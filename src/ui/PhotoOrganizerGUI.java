@@ -1,8 +1,6 @@
 package ui;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -44,6 +42,7 @@ public class PhotoOrganizerGUI {
     void loadMenuPage(ActionEvent event) {
     	load("menu-page.fxml");
     }
+    
 	public void load(String  page) {
 		try {
 			FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource(page));
@@ -52,7 +51,6 @@ public class PhotoOrganizerGUI {
 			login = fxmlLoader.load();
 			mainPane.getChildren().setAll(login);
 		} catch (IOException e) {
-
 			e.printStackTrace();
 		}
 	}
