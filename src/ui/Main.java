@@ -26,7 +26,7 @@ public class Main extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("PHOTO ORGANIZER");
 		primaryStage.show();
-		photoOrganizerGUI.loadMainPage();
+		photoOrganizerGUI.loadLoginPage();
 		
 	}
 }
