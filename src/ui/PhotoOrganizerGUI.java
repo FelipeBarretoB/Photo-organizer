@@ -45,7 +45,7 @@ public class PhotoOrganizerGUI {
     private TextField txtCreateUserName;
 
     @FXML
-    void loginUser(ActionEvent event) {
+    public void loginUser(ActionEvent event) {
     	int loggedUser;
     	if(!txtUserName.getText().equals("") && !txtPassword.getText().equals("")) {
     		loggedUser = organizer.findUser(txtUserName.getText());
@@ -66,12 +66,12 @@ public class PhotoOrganizerGUI {
     }
 
     @FXML
-    void openCreateUser(ActionEvent event) {
+    public void openCreateUser(ActionEvent event) {
     	load("createUser-page.fxml");
     }
 
     @FXML
-    void createUser(ActionEvent event) {
+    public void createUser(ActionEvent event) {
     	if(txtCreateUserName.getText() != null && txtCreatePassword.getText() != null
     		&& txtConfirmPassword.getText() != null) {
     		if(txtConfirmPassword.getText().equals(txtCreatePassword.getText())) {
