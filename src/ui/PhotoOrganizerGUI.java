@@ -22,24 +22,24 @@ public class PhotoOrganizerGUI {
 		load("Organize-Folder.fxml");
 	}
 	@FXML
-    void loadCustomizePreferences(ActionEvent event) {
+	public void loadCustomizePreferences(ActionEvent event) {
 		load("customise-preferences.fxml");
     }
 	@FXML
-    void backToOrganizeFolder(ActionEvent event) {
+	public void backToOrganizeFolder(ActionEvent event) {
 		load("Organize-Folder.fxml");
     }
 	@FXML
-    void loadCompareFolders(ActionEvent event) {
+	public void loadCompareFolders(ActionEvent event) {
 		load("compare-folders.fxml");
     }
 	@FXML
-    void loadManageFolders(ActionEvent event) {
+	public void loadManageFolders(ActionEvent event) {
 		load("manage-files.fxml");
     }
 
     @FXML
-    void loadMenuPage(ActionEvent event) {
+    public void loadMenuPage(ActionEvent event) {
     	load("menu-page.fxml");
     }
     
