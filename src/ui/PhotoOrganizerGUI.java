@@ -6,15 +6,93 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import model.Organizer;
 
 public class PhotoOrganizerGUI {
+	
+	private Organizer organizer;
+	
+	public PhotoOrganizerGUI(){
+		organizer = new Organizer("Photo Organizer");
+	}
 	
 	@FXML
     private Pane mainPane;
 	
+	@FXML
+    private Label labConfirmLogin;
+	
+	@FXML
+    private Label labConfirmNewUser;
+	
+	@FXML
+    private TextField txtUserName;
+
+    @FXML
+    private PasswordField txtPassword;
+    
+    @FXML
+    private PasswordField txtCreatePassword;
+
+    @FXML
+    private PasswordField txtConfirmPassword;
+
+    @FXML
+    private TextField txtCreateUserName;
+
+    @FXML
+    void loginUser(ActionEvent event) {
+    	int loggedUser;
+    	if(!txtUserName.getText().equals("") && !txtPassword.getText().equals("")) {
+    		loggedUser = organizer.findUser(txtUserName.getText());
+    		if(loggedUser >= 0) {
+    			if(organizer.getUsers().get(loggedUser).getPassword().equals(txtPassword.getText())) {
+					organizer.setActualUser(organizer.getUsers().get(loggedUser));
+					labConfirmLogin.setText("Logeado correctamente como " + organizer.getUsers().get(loggedUser).getName());
+				}else {
+					labConfirmLogin.setText("El usuario no existe");
+				}
+    		}else {
+				labConfirmLogin.setText("El usuario no existe");
+			}
+    	}else {
+    		labConfirmLogin.setText("Por favor llene todos los espacios");
+    	}
+    	
+    }
+
+    @FXML
+    void openCreateUser(ActionEvent event) {
+    	load("createUser-page.fxml");
+    }
+
+    @FXML
+    void createUser(ActionEvent event) {
+    	if(txtCreateUserName.getText() != null && txtCreatePassword.getText() != null
+    		&& txtConfirmPassword.getText() != null) {
+    		if(txtConfirmPassword.getText().equals(txtCreatePassword.getText())) {
+				if(organizer.findUser(txtCreateUserName.getText()) < 0) {
+					organizer.addUser(txtCreateUserName.getText(),txtCreatePassword.getText());
+					loadLoginPage();
+				}else {
+					labConfirmNewUser.setText("El usuario ya existe"); 
+				}
+    		}
+    	}else {
+    		labConfirmNewUser.setText("Por favor llene todos los espacios");
+    	}
+    }
+	
 	public void loadMainPage(){
 		load("menu-page.fxml");
+	}
+	
+	public void loadLoginPage(){
+		load("logIn-pane.fxml");
 	}
 	
 	@FXML
