@@ -1,5 +1,6 @@
 package ui;
 
+import java.io.File;
 import java.io.IOException;
 
 import javafx.event.ActionEvent;
@@ -10,6 +11,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 import model.Organizer;
 
 public class PhotoOrganizerGUI {
@@ -43,6 +46,9 @@ public class PhotoOrganizerGUI {
 
     @FXML
     private TextField txtCreateUserName;
+    
+    @FXML
+    private TextField txtFilePath;
 
     @FXML
     public void loginUser(ActionEvent event) {
@@ -132,4 +138,16 @@ public class PhotoOrganizerGUI {
 			e.printStackTrace();
 		}
 	}
+	
+	// TODO añadir al diagrama
+	//Organize-folder
+    @FXML
+    public void btnLookForFile(ActionEvent event) {
+    	DirectoryChooser directoryChooser = new DirectoryChooser();
+    	Stage stage=new Stage();
+    	File selectedDirectory = directoryChooser.showDialog(stage);
+    	txtFilePath.setText(selectedDirectory.getPath());
+    	organizer.callImportFile(selectedDirectory);
+    }
+	
 }
