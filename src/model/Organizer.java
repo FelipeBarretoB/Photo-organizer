@@ -4,6 +4,8 @@ import java.io.File;
 import java.sql.Date;
 import java.util.ArrayList;
 
+import thread.ImportFileThread;
+
 public class Organizer {
 	private String name;
 	private ArrayList<User> users;
@@ -11,6 +13,7 @@ public class Organizer {
 	private Type type;//por usar
 	private Organized organized;//por usar
 	private Files files;//por usar
+	private ImportFileThread importFileThread;
 
 	public Organizer(String n) {
 		this.name = n;
@@ -57,12 +60,21 @@ public class Organizer {
 		this.actualUser = actualUser;
 	}
 
+	public void callImportFile(File file) {
+		importFileThread = new ImportFileThread(this, file);
+		importFileThread.start();
+	}
+	
+	
 	public void addFile(File file) {
-		if(files==null) {
-			Date d= new Date(file.lastModified());
-			files = new Files(file.getName(), ""+file.length(),d.toString(),file ,foldersIn(file),filesIn(file), file.getPath()); 
-		}else {
-			addFile(files.getNext() , file);
+		Date d= new Date(file.lastModified());
+		files = new Files(file.getName(), ""+file.length(),d.toString(),file ,foldersIn(file),filesIn(file), file.getPath());
+		System.out.println("added: "+file.getName());
+		File[] fileList=file.listFiles();
+		for(int c=0;c<fileList.length;c++) {
+			if(fileList[c].list()!=null) {
+				addFile(files.getNext(),fileList[c]);
+			}
 		}
 	}
 
@@ -90,10 +102,16 @@ public class Organizer {
 
 	private void addFile(Files currentFile,File file) {
 		if(currentFile==null) {
+			//TODO 
+			System.out.println("added: "+file.getName());
 			Date d= new Date(file.lastModified());
 			currentFile = new Files(file.getName(), ""+file.length(),d.toString(),file ,foldersIn(file),filesIn(file), file.getPath()); 
-		}else {
-			addFile(currentFile.getNext() , file);
+			File[] fileList=file.listFiles();
+			for(int c=0;c<fileList.length;c++) {
+				if(fileList[c].list()!=null) {
+					addFile(files.getNext(),fileList[c]);
+				}
+			}
 		}
 	}
 
