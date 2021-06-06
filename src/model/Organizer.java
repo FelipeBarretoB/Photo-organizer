@@ -1,6 +1,7 @@
 package model;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.Date;
 import java.util.ArrayList;
 
@@ -69,6 +70,12 @@ public class Organizer {
 	public void addFile(File file) {
 		Date d= new Date(file.lastModified());
 		files = new Files(file.getName(), ""+file.length(),d.toString(),file ,foldersIn(file),filesIn(file), file.getPath());
+		try {
+			files.addPhotos();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("added: "+file.getName());
 		File[] fileList=file.listFiles();
 		for(int c=0;c<fileList.length;c++) {
@@ -105,7 +112,13 @@ public class Organizer {
 			//TODO 
 			System.out.println("added: "+file.getName());
 			Date d= new Date(file.lastModified());
-			currentFile = new Files(file.getName(), ""+file.length(),d.toString(),file ,foldersIn(file),filesIn(file), file.getPath()); 
+			currentFile = new Files(file.getName(), ""+file.length(),d.toString(),file ,foldersIn(file),filesIn(file), file.getPath());
+			try {
+				currentFile.addPhotos();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			File[] fileList=file.listFiles();
 			for(int c=0;c<fileList.length;c++) {
 				if(fileList[c].list()!=null) {
