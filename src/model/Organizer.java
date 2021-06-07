@@ -8,7 +8,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Date;
-import java.util.ArrayList;
 
 import thread.ImportFileThread;
 
@@ -20,10 +19,8 @@ public class Organizer {
 	private Organized organized;//por usar
 	private Files files;//por usar TODO creo que no se usa 
 	private ImportFileThread importFileThread;
-	public ArrayList<User> usersList;
 
 	public Organizer(String n) {
-		this.usersList = new ArrayList<User>();
 		this.name = n;
 		this.users = new UsersTree();
 	}
@@ -61,7 +58,6 @@ public class Organizer {
 		while(line!=null) {
 			String[] parts= line.split(",");
 			users.add(new User(parts[0],parts[1]));
-			usersList.add(new User(parts[0],parts[1]));
 			line=br.readLine();
 		}
 		br.close();
@@ -74,7 +70,6 @@ public class Organizer {
 	public void addUser(String n, String p) throws IOException {
 		User user = new User(n,p);
 		users.add(user);
-		usersList.add(user);
 		saveUsers(n,p);
 	}
 	
