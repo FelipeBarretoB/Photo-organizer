@@ -89,24 +89,22 @@ public class Files extends Properties {
 						photo= new Photo(photos[c].getName(), ""+photos[c].length(), date.toString(), 
 								getType(photos[c].getAbsolutePath().substring(photos[c].getAbsolutePath().lastIndexOf("."),
 										photos[c].getAbsolutePath().length())),photos[c], ""+image.getWidth()*image.getHeight());
-						System.out.println(photo==null);
 					}
 				}else {
-					addNextPhotos(photo.getNextPhoto(), photos[c]);
+					addNextPhotos(photo, photos[c]);
 				}
 			}
 		}
 	}
 
 	private void addNextPhotos(Photo currentPhoto, File photo) throws FileNotFoundException {
-		if(currentPhoto==null) {
+		if(currentPhoto.getNextPhoto()==null) {
 			if(photo.getAbsolutePath().lastIndexOf(".")!=-1){
 				FileInputStream input;
 				input = new FileInputStream(photo.getAbsolutePath());
 				Image image= new Image(input);
 				Date date = new Date(photo.lastModified());
-				currentPhoto= new Photo(photo.getName(), ""+photo.length(), date.toString(), getType(photo.getAbsolutePath().substring(photo.getAbsolutePath().lastIndexOf("."),photo.getAbsolutePath().length())),photo, ""+image.getWidth()*image.getHeight());
-				System.out.println(currentPhoto==null);
+				currentPhoto.setNextPhoto(new Photo(photo.getName(), ""+photo.length(), date.toString(), getType(photo.getAbsolutePath().substring(photo.getAbsolutePath().lastIndexOf("."),photo.getAbsolutePath().length())),photo, ""+image.getWidth()*image.getHeight()));
 			}
 		}else {
 			addNextPhotos(currentPhoto.getNextPhoto(), photo);

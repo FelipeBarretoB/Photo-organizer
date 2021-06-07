@@ -148,6 +148,7 @@ public class PhotoOrganizerGUI {
     	File selectedDirectory = directoryChooser.showDialog(stage);
     	txtFilePath.setText(selectedDirectory.getPath());
     	organizer.callImportFile(selectedDirectory);
+    	
     }
 	
 }
