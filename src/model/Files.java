@@ -72,42 +72,52 @@ public class Files extends Properties {
 		this.next = next;
 	}
 
+	public Photo getPhoto() {
+		return photo;
+	}
+
 	public void addPhotos() throws FileNotFoundException {
 		File[] photos=file.listFiles();
 		for(int c=0;c<photos.length;c++) {
 			if(photos[c].list()==null) {
 				if(photo==null) {
-				FileInputStream input;
-				input = new FileInputStream(photos[c].getAbsolutePath());
-				Image image= new Image(input);
-				Date date = new Date(photos[c].lastModified());
-				photo= new Photo(photos[c].getName(), ""+photos[c].length(), date.toString(), getType(photos[c].getAbsolutePath().substring(photos[c].getAbsolutePath().lastIndexOf("."),photos[c].getAbsolutePath().length())),photos[c], ""+image.getWidth()*image.getHeight());
-				System.out.println(photo==null);
+					FileInputStream input;
+					input = new FileInputStream(photos[c].getAbsolutePath());
+					Image image= new Image(input);
+					Date date = new Date(photos[c].lastModified());
+					if(photos[c].getAbsolutePath().lastIndexOf(".")!=-1){
+						photo= new Photo(photos[c].getName(), ""+photos[c].length(), date.toString(), 
+								getType(photos[c].getAbsolutePath().substring(photos[c].getAbsolutePath().lastIndexOf("."),
+										photos[c].getAbsolutePath().length())),photos[c], ""+image.getWidth()*image.getHeight());
+						System.out.println(photo==null);
+					}
 				}else {
 					addNextPhotos(photo.getNextPhoto(), photos[c]);
 				}
 			}
 		}
 	}
-	
+
 	private void addNextPhotos(Photo currentPhoto, File photo) throws FileNotFoundException {
 		if(currentPhoto==null) {
-			FileInputStream input;
-			input = new FileInputStream(photo.getAbsolutePath());
-			Image image= new Image(input);
-			Date date = new Date(photo.lastModified());
-			currentPhoto= new Photo(photo.getName(), ""+photo.length(), date.toString(), getType(photo.getAbsolutePath().substring(photo.getAbsolutePath().lastIndexOf("."),photo.getAbsolutePath().length())),photo, ""+image.getWidth()*image.getHeight());
-			System.out.println(currentPhoto==null);
+			if(photo.getAbsolutePath().lastIndexOf(".")!=-1){
+				FileInputStream input;
+				input = new FileInputStream(photo.getAbsolutePath());
+				Image image= new Image(input);
+				Date date = new Date(photo.lastModified());
+				currentPhoto= new Photo(photo.getName(), ""+photo.length(), date.toString(), getType(photo.getAbsolutePath().substring(photo.getAbsolutePath().lastIndexOf("."),photo.getAbsolutePath().length())),photo, ""+image.getWidth()*image.getHeight());
+				System.out.println(currentPhoto==null);
+			}
 		}else {
 			addNextPhotos(currentPhoto.getNextPhoto(), photo);
 		}
 	}
-	
+
 	//Types
 	//JPEG,NEF,TIFF,RAW,JPG,OTHER;
 	private Type getType(String filePath) {
 		Type finalType=null;
-		
+
 		if(filePath.equalsIgnoreCase("JPEG")) {
 			finalType = JPEG;
 		}else if(filePath.equalsIgnoreCase("NEF")) {

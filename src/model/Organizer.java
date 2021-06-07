@@ -11,9 +11,9 @@ public class Organizer {
 	private String name;
 	private ArrayList<User> users;
 	private User actualUser;
-	private Type type;//por usar
+	private Type type;//por usar TODO creo no se uso
 	private Organized organized;//por usar
-	private Files files;//por usar
+	private Files files;//por usar TODO creo que no se usa 
 	private ImportFileThread importFileThread;
 
 	public Organizer(String n) {
@@ -127,5 +127,10 @@ public class Organizer {
 			}
 		}
 	}
+	
+	public void getAllPhotosInFiles() {
+		files.getPhoto();
+	}
+	
 
 }
