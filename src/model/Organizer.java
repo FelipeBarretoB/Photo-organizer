@@ -1,7 +1,12 @@
 package model;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 
@@ -10,36 +15,75 @@ import thread.ImportFileThread;
 
 public class Organizer {
 	private String name;
-	private ArrayList<User> users;
+	private UsersTree users;
 	private User actualUser;
 	private Type type;//por usar TODO creo no se uso
 	private Organized organized;//por usar
 	private Files files;//por usar TODO creo que no se usa 
 	private ImportFileThread importFileThread;
+
 	private Photo allPhotos;
 	private GetAllPhotosThread getPhotosThread;
 
+	private ArrayList<User> usersList;
+
+
 	public Organizer(String n) {
+		this.usersList = new ArrayList<User>();
 		this.name = n;
-		this.users = new ArrayList<User>();
+		this.users = new UsersTree();
 	}
-
-	public int findUser(String name){
-		int x = -1;
-		if(users.size()!= 0) {
-			for(int i = 0; i<users.size(); i++) {
-				if(users.get(i).getName().equals(name)) {
-					x = i;
-				}
+	/*
+	a,a
+	e,e
+	i,i
+	o,o
+	u,u*/
+	
+	public void saveUsers(String n, String p) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader("data/UsersInfo.txt"));
+		String tem = "";
+		String s = "";
+		do {
+			tem = br.readLine();
+			if(tem != null) {
+				s += tem + "\n";
 			}
+		}while(tem != null);
+		br.close();
+		s+=n+ ","+p;
+		writeUsers(s);
+	}//n+ ","+p
+	
+	public void writeUsers(String s) throws IOException {
+		BufferedWriter bw = new BufferedWriter(new FileWriter("data/UsersInfo.txt"));
+		bw.write(s);
+		bw.close();
+	}
+	
+	public void loadUsers() throws IOException, ClassNotFoundException {
+		BufferedReader br = new BufferedReader(new FileReader("data/UsersInfo.txt"));
+		String line= br.readLine();
+		while(line!=null) {
+			String[] parts= line.split(",");
+			users.add(new User(parts[0],parts[1]));
+			usersList.add(new User(parts[0],parts[1]));
+			line=br.readLine();
 		}
-		return x;
+		br.close();
 	}
-
-	public void addUser(String n, String p) {
+	public User findUser(String name){
+		User user = users.searchUser(name);
+		return user;
+	}
+	
+	public void addUser(String n, String p) throws IOException {
 		User user = new User(n,p);
-		getUsers().add(user);
+		users.add(user);
+		usersList.add(user);
+		saveUsers(n,p);
 	}
+	
 	public String getName() {
 		return name;
 	}
@@ -48,11 +92,11 @@ public class Organizer {
 		this.name = name;
 	}
 
-	public ArrayList<User> getUsers() {
+	public UsersTree getUsers() {
 		return users;
 	}
 
-	public void setUsers(ArrayList<User> users) {
+	public void setUsers(UsersTree users) {
 		this.users = users;
 	}
 
@@ -125,7 +169,6 @@ public class Organizer {
 	
 	private void addFile(Files currentFile,File file) {
 		if(currentFile.getNext()==null) {
-			//TODO 
 			System.out.println("added: "+file.getName());
 			Date d= new Date(file.lastModified());
 			currentFile.setNext(new Files(file.getName(), ""+file.length(),d.toString(),file ,foldersIn(file),filesIn(file), file.getPath()));

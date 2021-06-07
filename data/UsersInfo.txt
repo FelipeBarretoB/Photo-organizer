@@ -1,0 +1,8 @@
+a,a
+e,e
+i,i
+o,o
+u,u
+t,t
+pedrito,1234
+orge,1111

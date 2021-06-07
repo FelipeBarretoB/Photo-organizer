@@ -2,6 +2,8 @@ package ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,6 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import model.Organizer;
+import model.User;
 
 public class PhotoOrganizerGUI {
 	
@@ -52,13 +55,13 @@ public class PhotoOrganizerGUI {
 
     @FXML
     public void loginUser(ActionEvent event) {
-    	int loggedUser;
+    	System.out.println(organizer.getUsers().size());
     	if(!txtUserName.getText().equals("") && !txtPassword.getText().equals("")) {
-    		loggedUser = organizer.findUser(txtUserName.getText());
-    		if(loggedUser >= 0) {
-    			if(organizer.getUsers().get(loggedUser).getPassword().equals(txtPassword.getText())) {
-					organizer.setActualUser(organizer.getUsers().get(loggedUser));
-					labConfirmLogin.setText("Logeado correctamente como " + organizer.getUsers().get(loggedUser).getName());
+    		User loggedUser = organizer.findUser(txtUserName.getText());
+    		if(loggedUser != null) {
+    			if(loggedUser.getPassword().equals(txtPassword.getText())) {
+					organizer.setActualUser(loggedUser);
+					labConfirmLogin.setText("Logeado correctamente como " + loggedUser.getName());
 				}else {
 					labConfirmLogin.setText("El usuario no existe");
 				}
@@ -77,16 +80,18 @@ public class PhotoOrganizerGUI {
     }
 
     @FXML
-    public void createUser(ActionEvent event) {
+    public void createUser(ActionEvent event) throws IOException {
     	if(txtCreateUserName.getText() != null && txtCreatePassword.getText() != null
     		&& txtConfirmPassword.getText() != null) {
     		if(txtConfirmPassword.getText().equals(txtCreatePassword.getText())) {
-				if(organizer.findUser(txtCreateUserName.getText()) < 0) {
+				if(organizer.findUser(txtCreateUserName.getText()) == null) {
 					organizer.addUser(txtCreateUserName.getText(),txtCreatePassword.getText());
 					loadLoginPage();
 				}else {
 					labConfirmNewUser.setText("El usuario ya existe"); 
 				}
+    		}else {
+    			labConfirmNewUser.setText("Las contraseñas no coinciden");
     		}
     	}else {
     		labConfirmNewUser.setText("Por favor llene todos los espacios");
@@ -97,7 +102,15 @@ public class PhotoOrganizerGUI {
 		load("menu-page.fxml");
 	}
 	
-	public void loadLoginPage(){
+	public void loadLoginPage() {
+		try {
+			organizer.loadUsers();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		load("logIn-pane.fxml");
 	}
 	
