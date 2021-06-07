@@ -9,6 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import thread.GetAllPhotosThread;
 import thread.ImportFileThread;
@@ -21,8 +23,7 @@ public class Organizer {
 	private Organized organized;//por usar
 	private Files files;//por usar TODO creo que no se usa 
 	private ImportFileThread importFileThread;
-
-	private Photo allPhotos;
+	private List<Photo> photos;
 	private GetAllPhotosThread getPhotosThread;
 
 	private ArrayList<User> usersList;
@@ -39,7 +40,7 @@ public class Organizer {
 	i,i
 	o,o
 	u,u*/
-	
+
 	public void saveUsers(String n, String p) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader("data/UsersInfo.txt"));
 		String tem = "";
@@ -54,13 +55,13 @@ public class Organizer {
 		s+=n+ ","+p;
 		writeUsers(s);
 	}//n+ ","+p
-	
+
 	public void writeUsers(String s) throws IOException {
 		BufferedWriter bw = new BufferedWriter(new FileWriter("data/UsersInfo.txt"));
 		bw.write(s);
 		bw.close();
 	}
-	
+
 	public void loadUsers() throws IOException, ClassNotFoundException {
 		BufferedReader br = new BufferedReader(new FileReader("data/UsersInfo.txt"));
 		String line= br.readLine();
@@ -76,14 +77,14 @@ public class Organizer {
 		User user = users.searchUser(name);
 		return user;
 	}
-	
+
 	public void addUser(String n, String p) throws IOException {
 		User user = new User(n,p);
 		users.add(user);
 		usersList.add(user);
 		saveUsers(n,p);
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -109,12 +110,11 @@ public class Organizer {
 	}
 
 	public void callImportFile(File file) {
-		allPhotos=null;
 		importFileThread = new ImportFileThread(this, file);
 		importFileThread.start();
 		getPhotosThread= new GetAllPhotosThread(this);
 	}
-	
+
 	public Files getFiles() {
 		return files;
 	}
@@ -136,9 +136,7 @@ public class Organizer {
 				addFile(files,fileList[c]);
 			}
 		}
-		System.out.println("end");
-		
-		
+		System.out.println("end");	
 		this.files=files;
 		getPhotosThread.start();
 	}
@@ -166,7 +164,7 @@ public class Organizer {
 	}
 
 
-	
+
 	private void addFile(Files currentFile,File file) {
 		if(currentFile.getNext()==null) {
 			System.out.println("added: "+file.getName());
@@ -188,32 +186,115 @@ public class Organizer {
 		}else {
 			addFile(currentFile.getNext(),file);
 		}
-		
+
 	}
-	//TODO 
-	int c=0;
-	public void getAllPhotosInFiles() {
-		System.out.println("pog 1 ");
-		if(allPhotos==null && files!=null) {
-			allPhotos=files.getPhoto();
-			System.out.println("a"+c++);
-			getAllPhotosInFiles(files.getNext(), allPhotos);
+
+	public void getAllPhotosInArray() {
+		photos=new ArrayList<>();
+		//photos.add(files.getPhoto());
+		getAllPhotosInArray(files.getPhoto(),files);
+		System.out.println(photos.size());
+		orderByDate();
+		testDates();
+		orderBySize();
+		testSize();
+		orderByResolution();
+		testResolution();
+		sortByName();
+		testName();
+	}
+	int i=1;
+	private void getAllPhotosInArray(Photo nextPhoto,Files nextFile) {
+
+		if(nextPhoto!=null) {
+			photos.add(nextPhoto);
+			getAllPhotosInArray(nextPhoto.getNextPhoto(),nextFile);
+		}else {
+			if(nextFile.getNext()!=null) {
+				getAllPhotosInArray(nextFile.getNext().getPhoto(),nextFile.getNext());
+			}
 		}
-			
+
+	}
+	//TODO borrar puto gay
+	public void testDates() {
+		for(int c=0;c<photos.size();c++) {
+			System.out.println(photos.get(c).getDate());
+		}
+	}
+
+	//TODO borrar puto gay
+	public void testSize() {
+		for(int c=0;c<photos.size();c++) {
+			System.out.println(photos.get(c).getSize());
+		}
+	}
+
+	//TODO borrar puto gay
+	public void testResolution() {
+		for(int c=0;c<photos.size();c++) {
+			System.out.println(photos.get(c).getResolution());
+		}
 	}
 	
-	private void getAllPhotosInFiles(Files currentFile, Photo photo) {
-		if(currentFile!=null) {
-			if(photo==null) {
-				photo=currentFile.getPhoto();
-				System.out.println("added");
-				getAllPhotosInFiles(currentFile.getNext(), photo);
-			}else {
-				System.out.println("b2"+c++);
-				getAllPhotosInFiles(currentFile, photo.getNextPhoto());
+	//TODO borrar puto gay
+		public void testName() {
+			for(int c=0;c<photos.size();c++) {
+				System.out.println(photos.get(c).getName());
+			}
+		}
+
+
+	public void orderByDate() {
+		boolean changed=true;
+		Photo flag=null;
+		for(int c=1;c <photos.size() && changed;c++) {
+			changed=false;
+			for(int i=0;i<photos.size()-c;i++) {
+				if((photos.get(i).getFile().lastModified())>photos.get(i+1).getFile().lastModified()) {
+					flag=photos.get(i);
+					photos.remove(i);
+					photos.add(i, photos.get(i+1));
+					photos.remove(i+1);
+					photos.add(i+1,flag );
+					changed=true;
+				}
 			}
 		}
 	}
 
+	public void orderBySize() {
+		Photo min=null;
+		Photo temp=null;
+		for (int i = 0; i < photos.size(); i++) {
+			min=photos.get(i);
+			for (int j = 1+i; j < photos.size(); j++) {
+				if(photos.get(j).getFile().length()<min.getFile().length()) {
+					temp=photos.get(j);
+					photos.remove(j);
+					photos.add(j, min);
+					min=temp;
+				}
+			}
+			photos.remove(i);
+			photos.add(i, min);
+		}
+	}
 
+	public void orderByResolution() {
+		for (int i = 1; i < photos.size(); i++) {
+			for (int j=i;j>0 && Double.parseDouble(photos.get(j-1).getResolution())>Double.parseDouble(photos.get(j).getResolution());j--) {
+				Photo temp=photos.get(j);
+				photos.remove(j);
+				photos.add(j, photos.get(j-1));
+				photos.remove(j-1);
+				photos.add(j-1, temp);
+			}
+		}
+	}
+	
+	
+	public void sortByName() {
+		Collections.sort(photos);
+	}
 }

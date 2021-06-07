@@ -88,7 +88,7 @@ public class Files extends Properties {
 					if(photos[c].getAbsolutePath().lastIndexOf(".")!=-1){
 						photo= new Photo(photos[c].getName(), ""+photos[c].length(), date.toString(), 
 								getType(photos[c].getAbsolutePath().substring(photos[c].getAbsolutePath().lastIndexOf("."),
-										photos[c].getAbsolutePath().length())),photos[c], ""+image.getWidth()*image.getHeight());
+										photos[c].getAbsolutePath().length())),photos[c], ""+(image.getWidth()*image.getHeight())/1000000);
 					}
 				}else {
 					addNextPhotos(photo, photos[c]);
@@ -104,7 +104,7 @@ public class Files extends Properties {
 				input = new FileInputStream(photo.getAbsolutePath());
 				Image image= new Image(input);
 				Date date = new Date(photo.lastModified());
-				currentPhoto.setNextPhoto(new Photo(photo.getName(), ""+photo.length(), date.toString(), getType(photo.getAbsolutePath().substring(photo.getAbsolutePath().lastIndexOf("."),photo.getAbsolutePath().length())),photo, ""+image.getWidth()*image.getHeight()));
+				currentPhoto.setNextPhoto(new Photo(photo.getName(), ""+photo.length(), date.toString(), getType(photo.getAbsolutePath().substring(photo.getAbsolutePath().lastIndexOf("."),photo.getAbsolutePath().length())),photo, ""+(image.getWidth()*image.getHeight())/1000000));
 			}
 		}else {
 			addNextPhotos(currentPhoto.getNextPhoto(), photo);

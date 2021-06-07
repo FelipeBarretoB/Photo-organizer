@@ -11,6 +11,6 @@ public class GetAllPhotosThread extends Thread{
 	
 	@Override
 	public void run() {	
-		orga.getAllPhotosInFiles();
+		orga.getAllPhotosInArray();
 	}
 }
