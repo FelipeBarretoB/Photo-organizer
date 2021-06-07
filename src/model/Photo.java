@@ -2,7 +2,9 @@ package model;
 
 import java.io.File;
 
-public class Photo extends Properties {
+
+
+public class Photo extends Properties implements Comparable<Photo> {
 	private Type type;
 	private String resolution;
 	private Photo nextPhoto; //y si ponemos solo next? xd
@@ -47,6 +49,12 @@ public class Photo extends Properties {
 	public void setNextPhoto(Photo nextPhoto) {
 		this.nextPhoto = nextPhoto;
 	}
+	public File getFile() {
+		return file;
+	}
 	
+	public int compareTo(Photo otherP) {
+		return getName().compareTo(otherP.getName());
+	}
 	
 }

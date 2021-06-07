@@ -1,6 +1,6 @@
 package model;
 
-public class Properties {
+public abstract class Properties  {
 	private String name;
 	private String size;
 	private String date;
