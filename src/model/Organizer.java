@@ -3,16 +3,12 @@ package model;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.List;
 
 import thread.ImportFileThread;
 
@@ -20,9 +16,9 @@ public class Organizer {
 	private String name;
 	private UsersTree users;
 	private User actualUser;
-	private Type type;//por usar
+	private Type type;//por usar TODO creo no se uso
 	private Organized organized;//por usar
-	private Files files;//por usar
+	private Files files;//por usar TODO creo que no se usa 
 	private ImportFileThread importFileThread;
 	public ArrayList<User> usersList;
 
@@ -115,6 +111,12 @@ public class Organizer {
 	public void addFile(File file) {
 		Date d= new Date(file.lastModified());
 		files = new Files(file.getName(), ""+file.length(),d.toString(),file ,foldersIn(file),filesIn(file), file.getPath());
+		try {
+			files.addPhotos();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("added: "+file.getName());
 		File[] fileList=file.listFiles();
 		for(int c=0;c<fileList.length;c++) {
@@ -150,7 +152,13 @@ public class Organizer {
 		if(currentFile==null) {
 			System.out.println("added: "+file.getName());
 			Date d= new Date(file.lastModified());
-			currentFile = new Files(file.getName(), ""+file.length(),d.toString(),file ,foldersIn(file),filesIn(file), file.getPath()); 
+			currentFile = new Files(file.getName(), ""+file.length(),d.toString(),file ,foldersIn(file),filesIn(file), file.getPath());
+			try {
+				currentFile.addPhotos();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			File[] fileList=file.listFiles();
 			for(int c=0;c<fileList.length;c++) {
 				if(fileList[c].list()!=null) {
@@ -159,5 +167,10 @@ public class Organizer {
 			}
 		}
 	}
+	
+	public void getAllPhotosInFiles() {
+		files.getPhoto();
+	}
+	
 
 }

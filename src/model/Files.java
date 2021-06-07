@@ -1,18 +1,28 @@
 package model;
 
+import static model.Type.JPEG;
+import static model.Type.JPG;
+import static model.Type.NEF;
+import static model.Type.OTHER;
+import static model.Type.RAW;
+import static model.Type.TIFF;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Date;
 
 import javafx.scene.image.Image;
 
 public class Files extends Properties {
-	
+
 	private int filesIn;
 	private int foldersIn;
 	private String location;
 	private Files next;
 	private File file;
 	private Photo photo;
-	
+
 	public Files(String n, String s,String d,File file, int fii, int foi, String l, Files next, Photo photo) {
 		super(n,s,d);
 		this.file=file;
@@ -61,14 +71,66 @@ public class Files extends Properties {
 	public void setNext(Files next) {
 		this.next = next;
 	}
-	
-	public void addPhotos() {
+
+	public Photo getPhoto() {
+		return photo;
+	}
+
+	public void addPhotos() throws FileNotFoundException {
 		File[] photos=file.listFiles();
 		for(int c=0;c<photos.length;c++) {
 			if(photos[c].list()==null) {
-				Image image= new Image(photos[c].getPath());
-			
+				if(photo==null) {
+					FileInputStream input;
+					input = new FileInputStream(photos[c].getAbsolutePath());
+					Image image= new Image(input);
+					Date date = new Date(photos[c].lastModified());
+					if(photos[c].getAbsolutePath().lastIndexOf(".")!=-1){
+						photo= new Photo(photos[c].getName(), ""+photos[c].length(), date.toString(), 
+								getType(photos[c].getAbsolutePath().substring(photos[c].getAbsolutePath().lastIndexOf("."),
+										photos[c].getAbsolutePath().length())),photos[c], ""+image.getWidth()*image.getHeight());
+						System.out.println(photo==null);
+					}
+				}else {
+					addNextPhotos(photo.getNextPhoto(), photos[c]);
+				}
 			}
 		}
+	}
+
+	private void addNextPhotos(Photo currentPhoto, File photo) throws FileNotFoundException {
+		if(currentPhoto==null) {
+			if(photo.getAbsolutePath().lastIndexOf(".")!=-1){
+				FileInputStream input;
+				input = new FileInputStream(photo.getAbsolutePath());
+				Image image= new Image(input);
+				Date date = new Date(photo.lastModified());
+				currentPhoto= new Photo(photo.getName(), ""+photo.length(), date.toString(), getType(photo.getAbsolutePath().substring(photo.getAbsolutePath().lastIndexOf("."),photo.getAbsolutePath().length())),photo, ""+image.getWidth()*image.getHeight());
+				System.out.println(currentPhoto==null);
+			}
+		}else {
+			addNextPhotos(currentPhoto.getNextPhoto(), photo);
+		}
+	}
+
+	//Types
+	//JPEG,NEF,TIFF,RAW,JPG,OTHER;
+	private Type getType(String filePath) {
+		Type finalType=null;
+
+		if(filePath.equalsIgnoreCase("JPEG")) {
+			finalType = JPEG;
+		}else if(filePath.equalsIgnoreCase("NEF")) {
+			finalType = NEF;
+		}else if(filePath.equalsIgnoreCase("TIFF")) {
+			finalType = TIFF;
+		}else if(filePath.equalsIgnoreCase("RAW")) {
+			finalType = RAW;
+		}else if(filePath.equalsIgnoreCase("JPG")) {
+			finalType = JPG;
+		}else{
+			finalType = OTHER;
+		}
+		return finalType;
 	}
 }
