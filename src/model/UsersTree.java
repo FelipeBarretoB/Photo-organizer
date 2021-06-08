@@ -10,8 +10,26 @@ public class UsersTree {
 	}
 	
 	public void add(User user) {
-		if(first != null) {
-			first.addUser(user);
+		User aux = first;
+		boolean added = false;
+		if(aux != null) {
+			while(added == false) {
+				if(aux.getName().compareTo(user.getName()) < 0) {
+					if(aux.getLeft() == null) {
+						aux.setLeft(user);
+						added = true;
+					}else {
+						aux = aux.getLeft();
+					}
+				}else {
+					if(aux.getRight() == null) {
+						aux.setRight(user);
+						added = true;
+					}else {
+						aux = aux.getRight();
+					}
+				}
+			}
 			size++;
 		}else {
 			first = user;
@@ -20,11 +38,22 @@ public class UsersTree {
 	}
 	
 	public User searchUser(String name) {
-		System.out.println(first.getName());
-		if(first != null) {
-			return first.find(name);
+		User aux = first;
+		boolean find = false;
+		while(find == false && aux != null) {
+			if(aux.getName().compareTo(name) == 0) {
+				find = true;
+			}else if(aux.getName().compareTo(name) < 0) {
+				aux = aux.getLeft();
+			}else {
+				if(aux.getRight() == null) {
+					find = true;
+				}else {
+					aux = aux.getRight();
+				}
+			}
 		}
-		return null;
+		return aux;
 	}
 
 	public User getFirst() {

@@ -44,35 +44,6 @@ public class User {
 		}
 		return tem;
 	}
-	public void addUser(User user) {
-		int i = 0;
-		int o = 0;
-		if(name.length() > user.getName().length()) {
-			o = user.getName().length();
-		}else {
-			o = name.length();
-		}
-		while(i < o && name.charAt(i) == user.getName().charAt(i)) {
-			i++;
-		}
-		if(i>0) {
-			i--;
-		}
-		if(name.charAt(i) < user.getName().charAt(i)) {
-			if(right == null) {
-				right = user;
-			} else {
-				right.addUser(user);
-			}
-			
-		}else {
-			if(right == null) {
-				left = user;
-			} else {
-				right.addUser(user);
-			}
-		}
-	}
 	public String getName() {
 		return name;
 	}

@@ -17,9 +17,7 @@ public class Main extends Application {
 		launch(args); 
 	}
 	@Override
-	public void start(Stage primaryStage) throws Exception {
-		
-		FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("main-pane.fxml"));
+	public void start(Stage primaryStage) throws Exception {FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("main-pane.fxml"));
 		fxmlLoader.setController(photoOrganizerGUI);
 		Parent root= fxmlLoader.load();
 		Scene scene = new Scene(root);
