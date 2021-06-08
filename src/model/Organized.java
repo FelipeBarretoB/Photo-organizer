@@ -13,6 +13,7 @@ public class Organized extends Properties implements Serializable{
 	private Organized right;
 	private Organized parent;
 	private Files files;
+	private User createdUser;
 	
 	public Organized (String n, String s,String d, int nOO) {
 		super(n,s,d);

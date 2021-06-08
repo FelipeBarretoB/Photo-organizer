@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
@@ -9,14 +10,19 @@
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="256.0" layoutY="41.0" text="Ordenar Carpeta" />
-      <Button layoutX="373.0" layoutY="116.0" mnemonicParsing="false" onAction="#btnLookForFile" text="Browse" />
-      <TextField fx:id="txtFilePath" layoutX="222.0" layoutY="116.0" prefHeight="25.0" prefWidth="153.0" />
-      <Label layoutX="104.0" layoutY="120.0" text="Seleccione la carpeta" />
-      <Button layoutX="385.0" layoutY="349.0" mnemonicParsing="false" text="Continuar" />
-      <Button layoutX="373.0" layoutY="175.0" mnemonicParsing="false" onAction="#loadCustomizePreferences" text="Personalizar" />
-      <Label layoutX="215.0" layoutY="179.0" text="Se organizara por Fecha" />
-      <CheckBox layoutX="218.0" layoutY="220.0" mnemonicParsing="false" text="Crear nuevas carpetas" />
-      <CheckBox layoutX="218.0" layoutY="254.0" mnemonicParsing="false" text="Crear archivo cvs" />
-      <CheckBox layoutX="218.0" layoutY="293.0" mnemonicParsing="false" text="Eliminar archivos repetidos" />
+      <Button layoutX="78.0" layoutY="87.0" mnemonicParsing="false" onAction="#btnLookForFile" text="Buscar carpeta para organizar" />
+      <TextField fx:id="txtFilePath" layoutX="377.0" layoutY="87.0" prefHeight="25.0" prefWidth="153.0" />
+      <Label layoutX="78.0" layoutY="137.0" text="Nombre de carpeta organizada:" />
+      <Button layoutX="266.0" layoutY="313.0" mnemonicParsing="false" onAction="#btnOrganize" text="Organizar" />
+      <Button layoutX="488.0" layoutY="29.0" mnemonicParsing="false" onAction="#loadCustomizePreferences" text="Personalizar" />
+      <Label layoutX="78.0" layoutY="179.0" text="Se organizara por:" />
+      <CheckBox layoutX="27.0" layoutY="366.0" mnemonicParsing="false" text="Crear nuevas carpetas" />
+      <CheckBox layoutX="174.0" layoutY="366.0" mnemonicParsing="false" text="Crear archivo cvs" />
+      <CheckBox layoutX="295.0" layoutY="366.0" mnemonicParsing="false" text="Eliminar archivos repetidos" />
+      <ComboBox fx:id="CBorganizeOptions" layoutX="185.0" layoutY="175.0" prefWidth="150.0" />
+      <Label layoutX="260.0" layoutY="91.0" prefHeight="17.0" prefWidth="119.0" text="Carpeta selecionada:" />
+      <TextField fx:id="txtNameForFolder" layoutX="254.0" layoutY="133.0" />
+      <Label layoutX="78.0" layoutY="214.0" text="Usuario:" />
+      <Label fx:id="lblUserName" layoutX="126.0" layoutY="214.0" />
    </children>
 </Pane>

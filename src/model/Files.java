@@ -1,11 +1,6 @@
 package model;
 
-import static model.Type.JPEG;
-import static model.Type.JPG;
-import static model.Type.NEF;
-import static model.Type.OTHER;
-import static model.Type.RAW;
-import static model.Type.TIFF;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -84,6 +79,7 @@ public class Files extends Properties {
 					FileInputStream input;
 					input = new FileInputStream(photos[c].getAbsolutePath());
 					Image image= new Image(input);
+					
 					Date date = new Date(photos[c].lastModified());
 					if(photos[c].getAbsolutePath().lastIndexOf(".")!=-1){
 						photo= new Photo(photos[c].getName(), ""+photos[c].length(), date.toString(), 
@@ -116,18 +112,20 @@ public class Files extends Properties {
 	private Type getType(String filePath) {
 		Type finalType=null;
 
-		if(filePath.equalsIgnoreCase("JPEG")) {
-			finalType = JPEG;
-		}else if(filePath.equalsIgnoreCase("NEF")) {
-			finalType = NEF;
-		}else if(filePath.equalsIgnoreCase("TIFF")) {
-			finalType = TIFF;
-		}else if(filePath.equalsIgnoreCase("RAW")) {
-			finalType = RAW;
-		}else if(filePath.equalsIgnoreCase("JPG")) {
-			finalType = JPG;
+		if(filePath.equalsIgnoreCase(".jpeg")) {
+			finalType = Type.JPEG;
+		}else if(filePath.equalsIgnoreCase(".NEF")) {
+			finalType = Type.NEF;
+		}else if(filePath.equalsIgnoreCase(".TIFF")) {
+			finalType = Type.TIFF;
+		}else if(filePath.equalsIgnoreCase(".RAW")) {
+			finalType = Type.RAW;
+		}else if(filePath.equalsIgnoreCase(".jpg")) {
+			finalType = Type.JPG;
+		}else if(filePath.equalsIgnoreCase(".CR2")) {
+			finalType = Type.CR2;
 		}else{
-			finalType = OTHER;
+			finalType = Type.OTHER;
 		}
 		return finalType;
 	}
