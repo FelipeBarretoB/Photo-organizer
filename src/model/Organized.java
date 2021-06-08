@@ -15,21 +15,31 @@ public class Organized extends Properties implements Serializable{
 	private Files files;
 	private User createdUser;
 	
-	public Organized (String n, String s,String d, int nOO) {
+	public User getCreatedUser() {
+		return createdUser;
+	}
+
+	public void setCreatedUser(User createdUser) {
+		this.createdUser = createdUser;
+	}
+
+	public Organized (String n, String s,String d, int nOO,User createdUser) {
 		super(n,s,d);
 		this.numOfOrga = nOO;
 		this.left = null;
 		this.right = null;
 		this.parent = null;
+		this.createdUser=createdUser;
 	}
 	
-	public Organized (String n, String s,String d, int nOO, Organized l, Organized r, Organized p, Files f) {
+	public Organized (String n, String s,String d, int nOO, Organized l, Organized r, Organized p, Files f,User createdUser) {
 		super(n,s,d);
 		this.numOfOrga = nOO;
 		this.left = l;
 		this.right = r;
 		this.parent = p;
 		this.files = f;
+		this.createdUser=createdUser;
 	}
 
 	public int getNumOfOrga() {

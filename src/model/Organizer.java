@@ -18,21 +18,24 @@ import java.util.Comparator;
 import java.util.List;
 import thread.GetAllPhotosThread;
 import thread.ImportFileThread;
+import thread.OrganizeAllPhotos;
 
 public class Organizer {
 	private String name;
 	private UsersTree users;
 	private User actualUser;
-	private Organized organized;//por usar
+	private Organized organized;
 	private Files files;
 	private ImportFileThread importFileThread;
 	private List<Photo> photos;
 	private GetAllPhotosThread getPhotosThread;
 	private ArrayList<User> usersList;
+	private OrganizeAllPhotos orgaThread;
 
 	public Organizer(String n) {
 		this.name = n;
 		this.users = new UsersTree();
+		organized=null;
 	}
 	/*
 	a,a
@@ -216,7 +219,12 @@ public class Organizer {
 		}
 
 	}
-
+	
+	public void callOrganizeThread(User user, String name, String organizeMathod) {
+		orgaThread= new OrganizeAllPhotos(this, user, name, organizeMathod);
+		orgaThread.start();
+	}
+	
 	public void organize(User user, String name, String organizeMethod) {
 		File organized= new File("Organized\\"+name);
 		organized.mkdir();
@@ -252,11 +260,45 @@ public class Organizer {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-		  
+		}
+		//String n, String s,String d, int nOO,User createdUser
+		Date d= new Date(organized.lastModified());
+		Files organizedFile= new Files(organized.getName(), ""+organized.length(),d.toString(),organized ,foldersIn(organized),filesIn(organized), organized.getPath());
+		addOrganized(organizedFile,organizedFile.getName(),organizedFile.getSize(),organizedFile.getDate(),photos.size(),user );
+	}
+
+	public void addOrganized(Files files,String name, String size, String date,int nOO, User createdUser) {
+		if(organized==null) {
+			System.out.println("added parent");
+			organized=new Organized(name, size, date, nOO, null, null, null, files, createdUser);
+		}else {
+			if(Integer.parseInt(organized.getSize())>=Integer.parseInt(files.getSize())){
+				addOrganized( files, name,  size,  date, nOO,  createdUser,  organized.getLeft(),organized);
+			}else if(Integer.parseInt(organized.getSize())<=Integer.parseInt(files.getSize())) {
+				addOrganized( files, name,  size,  date, nOO,  createdUser,  organized.getRight(),organized);
+			}
 		}
 	}
 
-
+	private void addOrganized(Files files,String name, String size, String date,int nOO, User createdUser, Organized currentOrganized, Organized parent) {
+		if(currentOrganized==null) {
+			System.out.println("added to side");
+			currentOrganized=new Organized(name, size, date, nOO, null, null, null, files, createdUser);
+			currentOrganized.setParent(parent);
+			if(Integer.parseInt(parent.getSize())>=Integer.parseInt(currentOrganized.getSize())){
+				parent.setLeft(currentOrganized);
+			}else if(Integer.parseInt(parent.getSize())<=Integer.parseInt(currentOrganized.getSize())) {
+				parent.setRight(currentOrganized);
+			}
+		}else {
+			if(Integer.parseInt(currentOrganized.getSize())>=Integer.parseInt(files.getSize())){
+				addOrganized( files, name,  size,  date, nOO,  createdUser,  currentOrganized.getLeft(),currentOrganized);
+			}else if(Integer.parseInt(currentOrganized.getSize())<=Integer.parseInt(files.getSize())) {
+				addOrganized( files, name,  size,  date, nOO,  createdUser,  currentOrganized.getRight(),currentOrganized);
+			}
+		}
+	}
+	
 	//TODO borrar puto gay
 	public void testDates() {
 		for(int c=0;c<photos.size();c++) {
