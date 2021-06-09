@@ -1,5 +1,7 @@
 package thread;
 
+import java.io.IOException;
+
 import model.Organizer;
 import model.User;
 
@@ -18,8 +20,14 @@ public class OrganizeAllPhotos extends Thread{
 	}
 	
 	@Override
-	public void run() {
-		orga.organize(user, nameOfFile, organizeMethod);
+	public void run(){
+			
+				try {
+					orga.organize(user, nameOfFile, organizeMethod);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 	}
 	
 }

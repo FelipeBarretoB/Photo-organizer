@@ -1,6 +1,12 @@
 package model;
 
-public abstract class Properties  {
+import java.io.Serializable;
+
+public abstract class Properties implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private String size;
 	private String date;

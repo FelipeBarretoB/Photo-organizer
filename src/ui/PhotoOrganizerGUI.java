@@ -7,10 +7,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -187,12 +189,19 @@ public class PhotoOrganizerGUI {
 
 	@FXML
 	void btnOrganize(ActionEvent event) {
-		if(CBorganizeOptions.getSelectionModel().getSelectedItem()!="" && organizer.getFiles()!=null) {
-			if(organizer.getActualUser()!=null) {
-				organizer.organize(organizer.getActualUser(), txtNameForFolder.getText(), CBorganizeOptions.getSelectionModel().getSelectedItem());
-			}else {
-				organizer.organize(null, txtNameForFolder.getText(), CBorganizeOptions.getSelectionModel().getSelectedItem());
+		if(!organizer.checkIfRunning()) {
+			if(CBorganizeOptions.getSelectionModel().getSelectedItem()!="" && organizer.getFiles()!=null) {
+				if(organizer.getActualUser()!=null) {
+					organizer.callOrganizeThread(organizer.getActualUser(),txtNameForFolder.getText(),  CBorganizeOptions.getSelectionModel().getSelectedItem());
+				}else {
+					organizer.callOrganizeThread(null,txtNameForFolder.getText(),  CBorganizeOptions.getSelectionModel().getSelectedItem());
+				}
 			}
+		}else {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("Alerta");
+			alert.setHeaderText("Aun esta cargando el archivo");
+			alert.showAndWait();
 		}
 	}
 

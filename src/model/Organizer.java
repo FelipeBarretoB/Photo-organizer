@@ -10,7 +10,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -194,19 +196,7 @@ public class Organizer {
 		photos=new ArrayList<>();
 		//photos.add(files.getPhoto());
 		getAllPhotosInArray(files.getPhoto(),files);
-		System.out.println(photos.size());
-		orderByDate();
-		testDates();
-		orderBySize();
-		testSize();
-		orderByResolution();
-		testResolution();
-		sortByName();
-		testName();
-		orderBySize();
-		testType();
 	}
-	int i=1;
 	private void getAllPhotosInArray(Photo nextPhoto,Files nextFile) {
 
 		if(nextPhoto!=null) {
@@ -219,13 +209,28 @@ public class Organizer {
 		}
 
 	}
-	
+
 	public void callOrganizeThread(User user, String name, String organizeMathod) {
 		orgaThread= new OrganizeAllPhotos(this, user, name, organizeMathod);
 		orgaThread.start();
 	}
 	
-	public void organize(User user, String name, String organizeMethod) {
+	public boolean checkIfRunning() {
+		return importFileThread.isAlive();
+	}
+	
+	public void saveOrganized() throws FileNotFoundException, IOException {
+		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("data\\organizedData.ap2"));
+		oos.writeObject(organized);
+		oos.close();
+	}
+	
+	public void deleteAllOrganized() throws FileNotFoundException, IOException {
+		organized=null;
+		saveOrganized();
+	}
+
+	public void organize(User user, String name, String organizeMethod) throws IOException {
 		File organized= new File("Organized\\"+name);
 		organized.mkdir();
 		if(organizeMethod.equals("Fecha")) {
@@ -239,33 +244,42 @@ public class Organizer {
 		}else if(organizeMethod.equals("Resolución")) {
 			orderByResolution();
 		}
-		
+		File csvFile=new File(organized.getPath()+"\\"+name+".csv");
+		File sign=new File(organized.getPath()+"\\creado por.txt");
+		PrintWriter pw= new PrintWriter(sign.getPath());
+		if(user==null) {
+			pw.println("Creado por: Anonimo");
+		}else {
+			pw.println("Creado por:"+user.getName());
+		}
+		pw.close();
+		csvFile.createNewFile();
+		pw= new PrintWriter(csvFile.getPath());
+		pw.println("Nombre;Tamaño;Resolución(mp);Tipo;Fecha");
 		for(int c=0;c<photos.size();c++) {
 			File fileCreator=new File(organized.getPath()+"\\"+photos.get(c).getFile().getName());
 			InputStream is = null;
-		    OutputStream os = null;
-		        try {
-					is = new FileInputStream(photos.get(c).getFile());
-					os = new FileOutputStream(fileCreator);
-					 byte[] buffer = new byte[1024];
-				        int length;
-				        while ((length = is.read(buffer)) > 0) {
-				            os.write(buffer, 0, length);
-				        }
+			OutputStream os = null;
+			is = new FileInputStream(photos.get(c).getFile());
+			os = new FileOutputStream(fileCreator);
+			byte[] buffer = new byte[1024];
+			int length;
+			while ((length = is.read(buffer)) > 0) {
+				os.write(buffer, 0, length);
+			}
+			is.close();
+			os.close();
+			fileCreator.createNewFile();
+			pw.println(photos.get(c).getName()+";"+photos.get(c).getSize()+";"+photos.get(c).getResolution()+";"+photos.get(c).getType()+";"+photos.get(c).getDate());
 			
-				        is.close();
-				        os.close();
-				        fileCreator.createNewFile();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 		}
 		//String n, String s,String d, int nOO,User createdUser
+		pw.close();
 		Date d= new Date(organized.lastModified());
 		Files organizedFile= new Files(organized.getName(), ""+organized.length(),d.toString(),organized ,foldersIn(organized),filesIn(organized), organized.getPath());
 		addOrganized(organizedFile,organizedFile.getName(),organizedFile.getSize(),organizedFile.getDate(),photos.size(),user );
 	}
+
 
 	public void addOrganized(Files files,String name, String size, String date,int nOO, User createdUser) {
 		if(organized==null) {
@@ -298,7 +312,7 @@ public class Organizer {
 			}
 		}
 	}
-	
+
 	//TODO borrar puto gay
 	public void testDates() {
 		for(int c=0;c<photos.size();c++) {
