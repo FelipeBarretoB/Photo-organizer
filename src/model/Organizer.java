@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
+import Exceptions.UserNotFoundException;
 import thread.GetAllPhotosThread;
 import thread.ImportFileThread;
 import thread.OrganizeAllPhotos;
@@ -37,6 +40,7 @@ public class Organizer {
 	public Organizer(String n) {
 		this.name = n;
 		this.users = new UsersTree();
+		this.usersList = new ArrayList<User>();
 		organized=null;
 	}
 	/*
@@ -46,7 +50,7 @@ public class Organizer {
 	o,o
 	u,u*/
 
-	public void saveUsers(String n, String p) throws IOException {
+	public void saveUsers(String n, String p, String c) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader("data/UsersInfo.txt"));
 		String tem = "";
 		String s = "";
@@ -57,7 +61,7 @@ public class Organizer {
 			}
 		}while(tem != null);
 		br.close();
-		s+=n+ ","+p;
+		s+=n+ ","+p+","+c;
 		writeUsers(s);
 	}//n+ ","+p
 
@@ -70,22 +74,99 @@ public class Organizer {
 	public void loadUsers() throws IOException, ClassNotFoundException {
 		BufferedReader br = new BufferedReader(new FileReader("data/UsersInfo.txt"));
 		String line= br.readLine();
+		usersList.clear();
 		while(line!=null) {
 			String[] parts= line.split(",");
-			users.add(new User(parts[0],parts[1]));
+			users.add(new User(parts[0],parts[1],Integer.parseInt(parts[2])));
+			usersList.add(new User(parts[0],parts[1],Integer.parseInt(parts[2])));
+			System.out.println(usersList.size());
+			selectionSort(usersList);
 			line=br.readLine();
+			
 		}
 		br.close();
 	}
-	public User findUser(String name){
+	
+	public static void selectionSort(ArrayList<User> users) {
+		for(int i = 0 ; i < users.size(); i++) {
+			int min = users.get(i).getCode();
+			for(int j = i+1; j < users.size(); j++) {
+				if(users.get(j).getCode() < min) {
+					int temp =  users.get(j).getCode();
+					users.get(j).setCode(min);
+					min = temp;
+				}
+			}
+			users.get(i).setCode(min);
+		}
+	}
+	
+	public String changeCode(String code) {
+		int i = 0;
+		while(i < usersList.size()) {
+			if(usersList.get(i).getCode() == Integer.parseInt(code)) {
+				i = 0;
+				code = randomCode();
+			}else {
+				i++;
+			}
+		}
+		return code;
+	}
+	
+	public User findUser(String name) throws UserNotFoundException{
 		User user = users.searchUser(name);
 		return user;
 	}
+	
+	public User findUserByCode(String code) {
+		User u = null;
+		boolean find = false;
+		int max = usersList.size();
+		int min = 0;
+		int mid = 0;
+		int c = Integer.parseInt(code);
+		while(min<=max && !find){
+			mid = (min+max)/2;
+			if(c == usersList.get(mid).getCode()) {
+				u = usersList.get(mid);
+				find = true;
+			}
+		}
+		return u;
+	}
 
 	public void addUser(String n, String p) throws IOException {
-		User user = new User(n,p);
+		String c = randomCode();
+		changeCode(c);
+		User user = new User(n,p,Integer.parseInt(c));
+		usersList.add(new User(n,p,Integer.parseInt(c)));
 		users.add(user);
-		saveUsers(n,p);
+		selectionSort(usersList);
+		saveUsers(n,p,c);
+		printUsers();
+	}//git commit -m "busqueda binaaria 2"
+	
+	public void printUsers() {
+		for(int i = 0; i < usersList.size(); i++) {
+			System.out.println(usersList.get(i).getCode());
+			System.out.println(usersList.size());
+		}
+	}
+	
+	public String randomCode() {
+		String box = "123456789";
+		String code = "";
+		for (int x = 0; x < 5; x++) {
+			int randInt = randNum(0, box.length() - 1);
+			char randChar = box.charAt(randInt);
+			code += randChar;
+		}
+		return code;
+	}
+	
+	public int randNum(int min, int max) {
+		return ThreadLocalRandom.current().nextInt(min, max + 1);
 	}
 
 	public String getName() {

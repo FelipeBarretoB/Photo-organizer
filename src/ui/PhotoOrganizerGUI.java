@@ -3,6 +3,9 @@ package ui;
 import java.io.File;
 import java.io.IOException;
 
+import Exceptions.InvalidPasswordException;
+import Exceptions.InvalidValuesException;
+import Exceptions.UserNotFoundException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -63,29 +66,57 @@ public class PhotoOrganizerGUI {
 	@FXML
 	private Label lblUserName;
 
+	@FXML
+    private Label confirmUserIn;//
 
+    @FXML
+    private TextField txtUserCode;
+
+    @FXML
+    private Label labUserNameIn;
+
+    @FXML
+    private Label labUserCodeIn;
+
+    @FXML
+    void searchUserByCode(ActionEvent event) {
+    	if(!txtUserCode.getText().equals("")) {
+    		if(organizer.findUserByCode(txtUserCode.getText()) != null) {
+    			User u = organizer.findUserByCode(txtUserCode.getText());
+    			labUserNameIn.setText(u.getName());
+    			labUserCodeIn.setText(String.valueOf(u.getCode()));
+    		}else {
+    			
+    		}
+    	}
+    }
 
 
 
 	@FXML
 	public void loginUser(ActionEvent event) {
-		System.out.println(organizer.getUsers().size());
-		if(!txtUserName.getText().equals("") && !txtPassword.getText().equals("")) {
-			User loggedUser = organizer.findUser(txtUserName.getText());
-			if(loggedUser != null) {
-				if(loggedUser.getPassword().equals(txtPassword.getText())) {
-					organizer.setActualUser(loggedUser);
-					labConfirmLogin.setText("Logeado correctamente como " + loggedUser.getName());
-				}else {
-					labConfirmLogin.setText("El usuario no existe");
+		try {
+			System.out.println(organizer.getUsers().size());
+			if(!txtUserName.getText().equals("") && !txtPassword.getText().equals("")) {
+				User loggedUser = organizer.findUser(txtUserName.getText());
+				if(loggedUser != null) {
+					if(loggedUser.getPassword().equals(txtPassword.getText())) {
+						organizer.setActualUser(loggedUser);
+						labConfirmLogin.setText("Logeado correctamente como " + loggedUser.getName());
+					}else {
+						throw new InvalidPasswordException();
+					}
 				}
 			}else {
-				labConfirmLogin.setText("El usuario no existe");
+				throw new InvalidValuesException();
 			}
-		}else {
-			labConfirmLogin.setText("Por favor llene todos los espacios");
+		}catch(InvalidValuesException ive) {
+			labConfirmLogin.setText(ive.getMessage());
+		}catch(InvalidPasswordException ipe) {
+			labConfirmLogin.setText(ipe.getMessage());
+		}catch(UserNotFoundException unfe) {
+			labConfirmLogin.setText(unfe.getMessage());
 		}
-
 	}
 
 	@FXML
@@ -94,28 +125,37 @@ public class PhotoOrganizerGUI {
 	}
 
 	@FXML
-	public void createUser(ActionEvent event) throws IOException {
-		if(txtCreateUserName.getText() != null && txtCreatePassword.getText() != null
-				&& txtConfirmPassword.getText() != null) {
-			if(txtConfirmPassword.getText().equals(txtCreatePassword.getText())) {
-				if(organizer.findUser(txtCreateUserName.getText()) == null) {
-					organizer.addUser(txtCreateUserName.getText(),txtCreatePassword.getText());
-					loadLoginPage();
+	public void createUser(ActionEvent event) throws IOException, UserNotFoundException {
+		try {
+			if(txtCreateUserName.getText() != null && txtCreatePassword.getText() != null
+					&& txtConfirmPassword.getText() != null) {
+				if(txtConfirmPassword.getText().equals(txtCreatePassword.getText())) {
+					if(organizer.findUser(txtCreateUserName.getText()) == null) {
+						organizer.addUser(txtCreateUserName.getText(),txtCreatePassword.getText());
+						loadLoginPage();
+					}else {
+						labConfirmNewUser.setText("El usuario ya existe"); 
+					}
 				}else {
-					labConfirmNewUser.setText("El usuario ya existe"); 
+					labConfirmNewUser.setText("Las contraseñas no coinciden");
 				}
 			}else {
-				labConfirmNewUser.setText("Las contraseñas no coinciden");
+				throw new InvalidValuesException();
 			}
-		}else {
-			labConfirmNewUser.setText("Por favor llene todos los espacios");
+			
+		}catch(InvalidValuesException ive) {
+			labConfirmNewUser.setText(ive.getMessage());
 		}
 	}
 
 	public void loadMainPage(){
 		load("menu-page.fxml");
 	}
-
+	
+	public void loadSearchUserPage(){
+		load("searchUser-page.fxml");
+	}
+	
 	public void loadLoginPage() {
 		try {
 			organizer.loadUsers();

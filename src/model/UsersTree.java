@@ -1,5 +1,7 @@
 package model;
 
+import Exceptions.UserNotFoundException;
+
 public class UsersTree {
 	public User first;
 	public int size;
@@ -37,7 +39,7 @@ public class UsersTree {
 		}
 	}
 	
-	public User searchUser(String name) {
+	public User searchUser(String name) throws UserNotFoundException {
 		User aux = first;
 		boolean find = false;
 		while(find == false && aux != null) {
@@ -46,12 +48,11 @@ public class UsersTree {
 			}else if(aux.getName().compareTo(name) < 0) {
 				aux = aux.getLeft();
 			}else {
-				if(aux.getRight() == null) {
-					find = true;
-				}else {
-					aux = aux.getRight();
-				}
+				aux = aux.getRight();
 			}
+		}
+		if(aux == null && !find) {
+			throw new UserNotFoundException();
 		}
 		return aux;
 	}
