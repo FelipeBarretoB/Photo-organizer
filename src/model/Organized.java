@@ -1,5 +1,6 @@
 package model;
 
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 
 public class Organized extends Properties implements Serializable{
@@ -14,7 +15,7 @@ public class Organized extends Properties implements Serializable{
 	private Organized parent;
 	private Files files;
 	private User createdUser;
-	
+
 	public User getCreatedUser() {
 		return createdUser;
 	}
@@ -31,7 +32,7 @@ public class Organized extends Properties implements Serializable{
 		this.parent = null;
 		this.createdUser=createdUser;
 	}
-	
+
 	public Organized (String n, String s,String d, int nOO, Organized l, Organized r, Organized p, Files f,User createdUser) {
 		super(n,s,d);
 		this.numOfOrga = nOO;
@@ -84,7 +85,27 @@ public class Organized extends Properties implements Serializable{
 
 	public void setFiles(Files files) {
 		this.files = files;
+
 	}
-	
-	
+
+	public String getAllPhotosNames() throws FileNotFoundException {
+		getFiles().addPhotos();
+		String names="";
+		if(files.getPhoto().getName()!=null) {
+			names+=files.getPhoto().getName();
+			if(!files.getPhoto().getNextPhoto().equals(null)) {
+				names=getAllPhotosNames( names, files.getPhoto().getNextPhoto());
+			}
+		}
+		return names;
+	}
+
+	private String getAllPhotosNames(String names,Photo currentPhoto) {
+		names+=", "+currentPhoto.getName();
+		if(currentPhoto.getNextPhoto()!=null) {
+			names=getAllPhotosNames(names,currentPhoto.getNextPhoto());
+		}
+		return names;
+	}
+
 }
