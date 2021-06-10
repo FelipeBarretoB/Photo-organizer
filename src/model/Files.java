@@ -11,6 +11,10 @@ import javafx.scene.image.Image;
 
 public class Files extends Properties {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int filesIn;
 	private int foldersIn;
 	private String location;
@@ -69,6 +73,10 @@ public class Files extends Properties {
 
 	public Photo getPhoto() {
 		return photo;
+	}
+	
+	public File getFile() {
+		return file;
 	}
 
 	public void addPhotos() throws FileNotFoundException {

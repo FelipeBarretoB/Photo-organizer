@@ -1,7 +1,9 @@
 package ui;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import Exceptions.InvalidPasswordException;
 import Exceptions.InvalidValuesException;
@@ -14,6 +16,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
@@ -58,7 +61,7 @@ public class PhotoOrganizerGUI {
 	private TextField txtFilePath;
 
 	@FXML
-	private ComboBox<String> CBorganizeOptions;
+	private ComboBox<String> cBorganizeOptions;
 
 	@FXML
 	private TextField txtNameForFolder;
@@ -90,6 +93,22 @@ public class PhotoOrganizerGUI {
     		}
     	}
     }
+	private ComboBox<String> cbOrganizedFiles;
+
+	@FXML
+	private TextArea txtPhotosNames;
+
+	@FXML
+	private Label lblName;
+
+	@FXML
+	private Label lblSize;
+
+	@FXML
+	private Label lblnOO;
+
+	@FXML
+	private Label lblUser;
 
 
 
@@ -170,7 +189,22 @@ public class PhotoOrganizerGUI {
 
 	@FXML
 	public void loadOrganizeFolder(ActionEvent event) {
+		try {
+			organizer.loadOrganized();
+		} catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		cBorganizeOptions= new ComboBox<>();
 		load("Organize-Folder.fxml");
+		cBorganizeOptions.getItems().add("Fecha");
+		cBorganizeOptions.getItems().add("Tipo");
+		cBorganizeOptions.getItems().add("Tamaño");
+		cBorganizeOptions.getItems().add("Nombre");
+		cBorganizeOptions.getItems().add("Resolución");
+		if(organizer.getActualUser()!=null) {
+			lblUserName.setText(organizer.getActualUser().getName());
+		}	
 	}
 	@FXML
 	public void loadCustomizePreferences(ActionEvent event) {
@@ -186,7 +220,18 @@ public class PhotoOrganizerGUI {
 	}
 	@FXML
 	public void loadManageFolders(ActionEvent event) {
+		cbOrganizedFiles= new ComboBox<String>();
+		try {
+			organizer.loadOrganized();
+		} catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		load("manage-files.fxml");
+		ArrayList<String> cbStrings= organizer.getOrganizedNames();
+		for(int c=0;c<cbStrings.size();c++) {
+			cbOrganizedFiles.getItems().add(cbStrings.get(c));
+		}
 	}
 
 	@FXML
@@ -196,19 +241,13 @@ public class PhotoOrganizerGUI {
 
 	public void load(String  page) {
 		try {
-			CBorganizeOptions= new ComboBox<>();
+
 			FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource(page));
 			fxmlLoader.setController(this);
 			Parent login;
 			login = fxmlLoader.load();
-			CBorganizeOptions.getItems().add("Fecha");
-			CBorganizeOptions.getItems().add("Tipo");
-			CBorganizeOptions.getItems().add("Tamaño");
-			CBorganizeOptions.getItems().add("Nombre");
-			CBorganizeOptions.getItems().add("Resolución");
-			if(organizer.getActualUser()!=null) {
-				lblUserName.setText(organizer.getActualUser().getName());
-			}
+
+
 			mainPane.getChildren().setAll(login);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -230,11 +269,11 @@ public class PhotoOrganizerGUI {
 	@FXML
 	void btnOrganize(ActionEvent event) {
 		if(!organizer.checkIfRunning()) {
-			if(CBorganizeOptions.getSelectionModel().getSelectedItem()!="" && organizer.getFiles()!=null) {
+			if(cBorganizeOptions.getSelectionModel().getSelectedItem()!="" && organizer.getFiles()!=null) {
 				if(organizer.getActualUser()!=null) {
-					organizer.callOrganizeThread(organizer.getActualUser(),txtNameForFolder.getText(),  CBorganizeOptions.getSelectionModel().getSelectedItem());
+					organizer.callOrganizeThread(organizer.getActualUser(),txtNameForFolder.getText(),  cBorganizeOptions.getSelectionModel().getSelectedItem());
 				}else {
-					organizer.callOrganizeThread(null,txtNameForFolder.getText(),  CBorganizeOptions.getSelectionModel().getSelectedItem());
+					organizer.callOrganizeThread(null,txtNameForFolder.getText(),  cBorganizeOptions.getSelectionModel().getSelectedItem());
 				}
 			}
 		}else {
@@ -244,5 +283,46 @@ public class PhotoOrganizerGUI {
 			alert.showAndWait();
 		}
 	}
+
+	@FXML
+	public void cbOrganizedFilesUpdate(ActionEvent event) throws FileNotFoundException {
+		
+		txtPhotosNames.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getAllPhotosNames());
+		lblName.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getName());
+		lblSize.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getSize());
+		lblnOO.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getNumOfOrga()+"");
+		if(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getCreatedUser()!=null)
+			lblUser.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getName());
+		else
+			lblUser.setText("Anonimo");
+	}
+	
+    @FXML
+    void btnRecreateOrga(ActionEvent event) {
+    	
+    	if(cbOrganizedFiles.getSelectionModel().getSelectedItem()!=null) {
+    		try {
+				organizer.createFileAgain(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}else {
+    		Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("Alerta");
+			alert.setHeaderText("Debe seleccionar un archivo");
+			alert.showAndWait();
+    	}
+    }
+    
+    @FXML
+    void btnDeleteOrganized(ActionEvent event) {
+    	try {
+			organizer.removeOrganized(cbOrganizedFiles.getSelectionModel().getSelectedItem());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 
 }

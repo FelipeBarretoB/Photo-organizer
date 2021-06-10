@@ -10,10 +10,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -173,6 +175,10 @@ public class Organizer {
 		return name;
 	}
 
+	public Organized getOrganized() {
+		return organized;
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -295,15 +301,25 @@ public class Organizer {
 		orgaThread= new OrganizeAllPhotos(this, user, name, organizeMathod);
 		orgaThread.start();
 	}
-	
+
 	public boolean checkIfRunning() {
 		return importFileThread.isAlive();
 	}
-	
+
 	public void saveOrganized() throws FileNotFoundException, IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("data\\organizedData.ap2"));
 		oos.writeObject(organized);
 		oos.close();
+	}
+
+	public void loadOrganized() throws FileNotFoundException, IOException, ClassNotFoundException {
+		File f = new File("data\\organizedData.ap2");
+		if(f.exists()){
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
+			organized = (Organized) ois.readObject();
+			ois.close();
+		}
+	
 	}
 	
 	public void deleteAllOrganized() throws FileNotFoundException, IOException {
@@ -333,6 +349,7 @@ public class Organizer {
 		}else {
 			pw.println("Creado por:"+user.getName());
 		}
+		pw.println("Creado el:"+LocalDateTime.now().toString());
 		pw.close();
 		csvFile.createNewFile();
 		pw= new PrintWriter(csvFile.getPath());
@@ -352,13 +369,16 @@ public class Organizer {
 			os.close();
 			fileCreator.createNewFile();
 			pw.println(photos.get(c).getName()+";"+photos.get(c).getSize()+";"+photos.get(c).getResolution()+";"+photos.get(c).getType()+";"+photos.get(c).getDate());
-			
+
 		}
-		//String n, String s,String d, int nOO,User createdUser
 		pw.close();
 		Date d= new Date(organized.lastModified());
+
 		Files organizedFile= new Files(organized.getName(), ""+organized.length(),d.toString(),organized ,foldersIn(organized),filesIn(organized), organized.getPath());
+		organizedFile.addPhotos();
 		addOrganized(organizedFile,organizedFile.getName(),organizedFile.getSize(),organizedFile.getDate(),photos.size(),user );
+		saveOrganized();
+
 	}
 
 
@@ -489,4 +509,169 @@ public class Organizer {
 		};
 		Collections.sort(photos,floorComparator);
 	}
+
+	public ArrayList<String> getOrganizedNames(){
+		ArrayList<String> returnValue= new ArrayList<>();
+		if(organized!=null) {
+
+			getOrganizedNames(organized.getLeft(),returnValue);
+
+			returnValue.add(organized.getName());
+
+			getOrganizedNames(organized.getRight(),returnValue);
+		}	
+		return returnValue;
+	}
+
+	private ArrayList<String> getOrganizedNames(Organized root, ArrayList<String> returnValue){
+		if(root!=null) {
+
+			getOrganizedNames(root.getLeft(),returnValue);
+
+			returnValue.add(root.getName());
+
+			getOrganizedNames(root.getRight(),returnValue);
+		}	
+		return returnValue;
+	}
+
+	public Organized getOrganizedByName(String name) {
+		Organized found=null;
+		if(organized!=null) {
+			if(organized.getName().equals(name)) {
+				found=organized;
+			}else {
+				found=getOrganizedByName( name, organized.getLeft(),  found);
+				found=getOrganizedByName( name, organized.getRight(),  found);
+			}
+		}
+		return found;
+	}
+
+	private Organized getOrganizedByName(String name,Organized currentOrga, Organized found) {
+		if(currentOrga!=null) {
+			if(currentOrga.getName().equals(name)) {
+				found=currentOrga;
+			}else {
+				found=getOrganizedByName( name, currentOrga.getLeft(),  found);
+				found=getOrganizedByName( name, currentOrga.getRight(),  found);
+			}
+		}
+		return found;
+	}
+
+	public void createFileAgain(Organized rebornOrganized) throws IOException {
+		rebornOrganized.getFiles().getFile().mkdir();
+		createPhotosOfFile(rebornOrganized);
+
+	}
+
+	private void createPhotosOfFile(Organized rebornOrganized) throws IOException {
+		ArrayList<Photo> photo=getAllPhotosInArrayForCreateFileAgain(rebornOrganized.getFiles().getPhoto(),  rebornOrganized.getFiles()); 
+		System.out.println(photo.size());
+		File csvFile=new File((rebornOrganized.getFiles().getFile().getPath()+"\\"+rebornOrganized.getName()+".csv"));
+		File sign=new File((rebornOrganized.getFiles().getFile().getPath()+"\\creado por.txt"));
+		PrintWriter pw= new PrintWriter(sign.getPath());
+		if(rebornOrganized.getCreatedUser()==null) {
+			pw.println("Creado por: Anonimo");
+		}else {
+			pw.println("Creado por:"+rebornOrganized.getCreatedUser().getName());
+		}
+		pw.println("Creado el:"+LocalDateTime.now().toString());
+		pw.close();
+		csvFile.createNewFile();
+		pw= new PrintWriter(csvFile.getPath());
+		pw.println("Nombre;Tamaño;Resolución(mp);Tipo;Fecha");
+		for(int c=0;c<photo.size();c++) {
+			pw.println(photo.get(c).getName()+";"+photo.get(c).getSize()+";"+photo.get(c).getResolution()+";"+photo.get(c).getType()+";"+photo.get(c).getDate());
+		}
+		pw.close();
+	}
+
+
+	public ArrayList<Photo> getAllPhotosInArrayForCreateFileAgain(Photo photos, Files files) {
+
+		ArrayList<Photo> photo=new ArrayList<>();
+		getAllPhotosInArray(files.getPhoto(),files,photo);
+		return photo;
+	}
+
+	private void getAllPhotosInArray(Photo nextPhoto,Files nextFile,ArrayList<Photo> photos) {
+		if(nextPhoto!=null) {
+			photos.add(nextPhoto);
+			getAllPhotosInArray(nextPhoto.getNextPhoto(),nextFile,photos);
+		}else {
+			if(nextFile.getNext()!=null) {
+				getAllPhotosInArray(nextFile.getNext().getPhoto(),nextFile.getNext(),photos);
+			}
+		}
+
+	}
+
+	public void removeOrganized(String name) throws FileNotFoundException, IOException {
+		ArrayList<Organized> organizedArray=new ArrayList<>();
+		organizedArray=getOrganizedInArray( organized,  organizedArray);
+		organized=null;
+		for(int c=0;c<organizedArray.size();c++) {
+			organizedArray.get(c).setLeft(null);
+			organizedArray.get(c).setRight(null);
+			organizedArray.get(c).setParent(null);
+		}
+		for(int c=0;c<organizedArray.size();c++) {
+
+			if(organizedArray.get(c).getName().equals(name)) {
+
+				organizedArray.remove(c);
+
+			}
+		}
+		for(int c=0;c<organizedArray.size();c++) {
+			addOrganized(organizedArray.get(c));
+		}
+		saveOrganized();
+	}
+
+	private ArrayList<Organized> getOrganizedInArray(Organized root, ArrayList<Organized> returnValue){
+		if(root!=null) {
+
+			returnValue=getOrganizedInArray(root.getLeft(),returnValue);
+
+			returnValue.add(root);
+
+			returnValue=getOrganizedInArray(root.getRight(),returnValue);
+		}	
+		return returnValue;
+	}
+
+	private void addOrganized(Organized orga) throws FileNotFoundException, IOException {
+		if(organized==null) {
+			organized=orga;
+		}else {
+			if(Integer.parseInt(organized.getSize())>=Integer.parseInt(orga.getSize())){
+				addOrganized(orga,organized.getLeft(),organized);
+			}else if(Integer.parseInt(organized.getSize())<=Integer.parseInt(files.getSize())) {
+				addOrganized( orga,organized.getRight(),organized);
+			}
+		}
+		saveOrganized();
+	}
+
+	private void addOrganized(Organized orga,Organized currentOrganized ,Organized parent) {
+		if(currentOrganized==null) {
+			currentOrganized=orga;
+			currentOrganized.setParent(parent);
+			if(Integer.parseInt(parent.getSize())>=Integer.parseInt(currentOrganized.getSize())){
+				parent.setLeft(currentOrganized);
+			}else if(Integer.parseInt(parent.getSize())<=Integer.parseInt(currentOrganized.getSize())) {
+				parent.setRight(currentOrganized);
+			}
+		}else {
+			if(Integer.parseInt(currentOrganized.getSize())>=Integer.parseInt(files.getSize())){
+				addOrganized( orga,  currentOrganized.getLeft(),currentOrganized);
+			}else if(Integer.parseInt(currentOrganized.getSize())<=Integer.parseInt(files.getSize())) {
+				addOrganized( orga,  currentOrganized.getRight(),currentOrganized);
+			}
+		}
+	}
+	
 }
