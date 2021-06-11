@@ -133,6 +133,10 @@ public class Organizer {
 			if(c == usersList.get(mid).getCode()) {
 				u = usersList.get(mid);
 				find = true;
+			}else if(c < usersList.get(mid).getCode()) {
+				max = mid-1;
+			}else {
+				min = mid+1;
 			}
 		}
 		return u;
