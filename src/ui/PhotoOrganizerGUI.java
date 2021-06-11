@@ -135,6 +135,7 @@ public class PhotoOrganizerGUI {
     		}
     	}
     }
+    @FXML
 	private ComboBox<String> cbOrganizedFiles;
 
 	@FXML
@@ -328,8 +329,8 @@ public class PhotoOrganizerGUI {
 
 	@FXML
 	public void cbOrganizedFilesUpdate(ActionEvent event) throws FileNotFoundException {
-		
-		txtPhotosNames.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getAllPhotosNames());
+		try {
+		txtPhotosNames.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getAllNames());
 		lblName.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getName());
 		lblSize.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getSize());
 		lblnOO.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getNumOfOrga()+"");
@@ -337,6 +338,9 @@ public class PhotoOrganizerGUI {
 			lblUser.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getName());
 		else
 			lblUser.setText("Anonimo");
+		}catch (NullPointerException e) {
+		
+		}
 	}
 	
     @FXML
@@ -360,7 +364,18 @@ public class PhotoOrganizerGUI {
     @FXML
     void btnDeleteOrganized(ActionEvent event) {
     	try {
+    		
 			organizer.removeOrganized(cbOrganizedFiles.getSelectionModel().getSelectedItem());
+			txtPhotosNames.setText("");
+			lblName.setText("");
+			lblSize.setText("");
+			lblnOO.setText("");
+			lblUser.setText("");
+			cbOrganizedFiles.getItems().clear();
+			ArrayList<String> cbStrings= organizer.getOrganizedNames();
+			for(int c=0;c<cbStrings.size();c++) {
+				cbOrganizedFiles.getItems().add(cbStrings.get(c));
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

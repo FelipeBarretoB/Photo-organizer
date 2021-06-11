@@ -52,6 +52,10 @@ public class Organizer {
 	o,o
 	u,u*/
 
+	public ImportFileThread getImportFileThread() {
+		return importFileThread;
+	}
+	
 	public void saveUsers(String n, String p, String c) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader("data/UsersInfo.txt"));
 		String tem = "";
@@ -223,14 +227,12 @@ public class Organizer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("added: "+file.getName());
 		File[] fileList=file.listFiles();
 		for(int c=0;c<fileList.length;c++) {
 			if(fileList[c].list()!=null) {
 				addFile(files,fileList[c]);
 			}
 		}
-		System.out.println("end");	
 		this.files=files;
 		getPhotosThread.start();
 	}
@@ -388,8 +390,9 @@ public class Organizer {
 
 	public void addOrganized(Files files,String name, String size, String date,int nOO, User createdUser) {
 		if(organized==null) {
-			System.out.println("added parent");
+			
 			organized=new Organized(name, size, date, nOO, null, null, null, files, createdUser);
+			organized.callAllPhotos();
 		}else {
 			if(Integer.parseInt(organized.getSize())>=Integer.parseInt(files.getSize())){
 				addOrganized( files, name,  size,  date, nOO,  createdUser,  organized.getLeft(),organized);
@@ -401,8 +404,9 @@ public class Organizer {
 
 	private void addOrganized(Files files,String name, String size, String date,int nOO, User createdUser, Organized currentOrganized, Organized parent) {
 		if(currentOrganized==null) {
-			System.out.println("added to side");
+	
 			currentOrganized=new Organized(name, size, date, nOO, null, null, null, files, createdUser);
+			currentOrganized.callAllPhotos();
 			currentOrganized.setParent(parent);
 			if(Integer.parseInt(parent.getSize())>=Integer.parseInt(currentOrganized.getSize())){
 				parent.setLeft(currentOrganized);
@@ -418,40 +422,7 @@ public class Organizer {
 		}
 	}
 
-	//TODO borrar puto gay
-	public void testDates() {
-		for(int c=0;c<photos.size();c++) {
-			System.out.println(photos.get(c).getDate());
-		}
-	}
-
-	//TODO borrar puto gay
-	public void testSize() {
-		for(int c=0;c<photos.size();c++) {
-			System.out.println(photos.get(c).getSize());
-		}
-	}
-
-	//TODO borrar puto gay
-	public void testResolution() {
-		for(int c=0;c<photos.size();c++) {
-			System.out.println(photos.get(c).getResolution());
-		}
-	}
-
-	//TODO borrar puto gay
-	public void testName() {
-		for(int c=0;c<photos.size();c++) {
-			System.out.println(photos.get(c).getName());
-		}
-	}
-
-	//TODO borrar puto gay
-	public void testType() {
-		for(int c=0;c<photos.size();c++) {
-			System.out.println(photos.get(c).getType().toString());
-		}
-	}
+	
 
 
 
@@ -572,7 +543,7 @@ public class Organizer {
 
 	private void createPhotosOfFile(Organized rebornOrganized) throws IOException {
 		ArrayList<Photo> photo=getAllPhotosInArrayForCreateFileAgain(rebornOrganized.getFiles().getPhoto(),  rebornOrganized.getFiles()); 
-		System.out.println(photo.size());
+		
 		File csvFile=new File((rebornOrganized.getFiles().getFile().getPath()+"\\"+rebornOrganized.getName()+".csv"));
 		File sign=new File((rebornOrganized.getFiles().getFile().getPath()+"\\creado por.txt"));
 		PrintWriter pw= new PrintWriter(sign.getPath());
