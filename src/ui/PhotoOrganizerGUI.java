@@ -23,6 +23,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import model.LoadBall;
 import model.Organizer;
 import model.User;
 import thread.BallThread;
@@ -84,18 +85,42 @@ public class PhotoOrganizerGUI {
     private Label labUserCodeIn;
     
     @FXML
-    private Circle loadCircle;
+    private Circle loadCircle1;
+    
+    @FXML
+    private Circle loadCircle2;
+
+    @FXML
+    private Circle loadCircle3;
+
+    @FXML
+    private Circle loadCircle4;
     
     @FXML
     void loadLoaadingCircle(ActionEvent event) {
     	load("loading_screen.fxml");
-    	new BallThread(200, this).start();
-    	
+    	LoadBall b1 = new LoadBall(300,250,325,225);
+    	LoadBall b2 = new LoadBall(325,225,350,200);
+    	LoadBall b3 = new LoadBall(350,200,325,175);
+    	LoadBall b4 = new LoadBall(325,175,300,150);
+    	new BallThread(100, this, b1, b2, b3, b4).start();
     }
     
-    public void uploadCircle(int x, int y) {
-    	loadCircle.setLayoutX(x);
-    	loadCircle.setLayoutY(y);
+    public void uploadCircle1(int x, int y) {
+    	loadCircle1.setLayoutX(x);
+    	loadCircle1.setLayoutY(y);
+    }
+    public void uploadCircle2(int x, int y) {
+    	loadCircle2.setLayoutX(x);
+    	loadCircle2.setLayoutY(y);
+    }
+    public void uploadCircle3(int x, int y) {
+    	loadCircle3.setLayoutX(x);
+    	loadCircle3.setLayoutY(y);
+    }
+    public void uploadCircle4(int x, int y) {
+    	loadCircle4.setLayoutX(x);
+    	loadCircle4.setLayoutY(y);
     }
     
     @FXML

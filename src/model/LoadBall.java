@@ -6,11 +6,11 @@ public class LoadBall {
 	private int prevPosX;
 	private int prevPosY;
 	
-	public LoadBall() {
-		this.posX = 300;
-		this.posY = 250;
-		this.prevPosX = 275;
-		this.prevPosY = 0;
+	public LoadBall(int x, int y, int px, int py) {
+		this.posX = x;
+		this.posY = y;
+		this.prevPosX = px;
+		this.prevPosY = py;
 	}
 	
 	public int moveBallX() {
