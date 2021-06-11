@@ -20,10 +20,12 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import model.Organizer;
 import model.User;
+import thread.BallThread;
 
 public class PhotoOrganizerGUI {
 
@@ -80,7 +82,22 @@ public class PhotoOrganizerGUI {
 
     @FXML
     private Label labUserCodeIn;
-
+    
+    @FXML
+    private Circle loadCircle;
+    
+    @FXML
+    void loadLoaadingCircle(ActionEvent event) {
+    	load("loading_screen.fxml");
+    	new BallThread(200, this).start();
+    	
+    }
+    
+    public void uploadCircle(int x, int y) {
+    	loadCircle.setLayoutX(x);
+    	loadCircle.setLayoutY(y);
+    }
+    
     @FXML
     void searchUserByCode(ActionEvent event) {
     	if(!txtUserCode.getText().equals("")) {

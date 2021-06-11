@@ -13,6 +13,7 @@
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#loadMenuPage" text="Home" />
               <MenuItem mnemonicParsing="false" onAction="#loadSearchUserPage" text="Buscar usuario" />
+                  <MenuItem mnemonicParsing="false" onAction="#loadLoaadingCircle" text="Pantalla de carga" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Backup">
