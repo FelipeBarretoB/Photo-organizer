@@ -9,7 +9,7 @@ import java.util.Date;
 
 import javafx.scene.image.Image;
 
-public class Files extends Properties {
+public class Files extends Properties implements Files_Interface{
 
 	/**
 	 * 

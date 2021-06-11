@@ -11,7 +11,7 @@ public class test {
 	
 	private Organizer organizedNotEmpty;
 	
-	private Organizer fileWith20Photos;
+	private Organizer fileWithPhotos;
 	
 	private Organizer organizedEmpty;
 	
@@ -26,9 +26,9 @@ public class test {
 	}
 	
 	public void setUpSenario2() throws IOException {
-		fileWith20Photos= new Organizer("Photo organizer");
-		fileWith20Photos.callImportFile(new File("data/testFiles/test"));
-		while(fileWith20Photos.getImportFileThread().isAlive()) {}
+		fileWithPhotos= new Organizer("Photo organizer");
+		fileWithPhotos.callImportFile(new File("data/testFiles/test"));
+		while(fileWithPhotos.getImportFileThread().isAlive()) {}
 	}
 	
 	public void setUpSenario3() {
@@ -43,7 +43,7 @@ public class test {
 
 
 	@Test
-	void addFileToEmptyFiles() {
+	public void addFileToEmptyFiles() {
 		setUpSenario4();
 		filesEmpty.callImportFile(new File("data/testFiles/test"));
 		while(filesEmpty.getImportFileThread().isAlive()) {}
@@ -51,18 +51,18 @@ public class test {
 	}
 	
 	@Test
-	void addFileToFiles() {
+	public void addFileToFiles() {
 		try {
 			setUpSenario2();
-			fileWith20Photos.callImportFile(new File("data/testFiles/test2"));
-			assertTrue(fileWith20Photos.getFiles()!=null);
+			fileWithPhotos.callImportFile(new File("data/testFiles/test2"));
+			assertTrue(fileWithPhotos.getFiles()!=null);
 		} catch (IOException e) {
 			fail("File not found");
 		}
 	}
 	
 	@Test
-	void addOrganizedNotEmpty() {
+	public void addOrganizedNotEmpty() {
 		try {
 			setUpSenario1();
 			organizedNotEmpty.callImportFile(new File("data/testFiles/test2"));
@@ -76,7 +76,7 @@ public class test {
 
 	
 	@Test
-	void addToEmptyOrganized() {
+	public void addToEmptyOrganized() {
 		try {
 			setUpSenario3();
 			organizedEmpty.callImportFile(new File("data/testFiles/test"));
@@ -89,7 +89,7 @@ public class test {
 	}
 	
 	@Test
-	void organizeByDate() {
+	public void organizeByDate() {
 		try {
 			setUpSenario3();
 			organizedEmpty.callImportFile(new File("data/testFiles/test"));
@@ -101,7 +101,7 @@ public class test {
 		}
 	}
 	@Test
-	void organizeByType() {
+	public void organizeByType() {
 		try {
 			setUpSenario3();
 			organizedEmpty.callImportFile(new File("data/testFiles/test"));
@@ -113,7 +113,7 @@ public class test {
 		}
 	}
 	@Test
-	void organizeByName() {
+	public void organizeByName() {
 		try {
 			setUpSenario3();
 			organizedEmpty.callImportFile(new File("data/testFiles/test"));
@@ -125,7 +125,7 @@ public class test {
 		}
 	}
 	@Test
-	void organizeBySize() {
+	public void organizeBySize() {
 		try {
 			setUpSenario3();
 			organizedEmpty.callImportFile(new File("data/testFiles/test2"));
@@ -136,7 +136,7 @@ public class test {
 			fail("File not found");
 		}
 	}
-	void organizeByResolution() {
+	public void organizeByResolution() {
 		try {
 			setUpSenario3();
 			organizedEmpty.callImportFile(new File("data/testFiles/test2"));

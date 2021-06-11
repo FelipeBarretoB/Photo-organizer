@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 import thread.GetAllPhotosNames;
 
-public class Organized extends Properties implements Serializable{
+public class Organized extends Properties implements Organized_Interface, Serializable {
 
 	/**
 	 * 

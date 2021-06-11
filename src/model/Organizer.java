@@ -27,7 +27,7 @@ import thread.GetAllPhotosThread;
 import thread.ImportFileThread;
 import thread.OrganizeAllPhotos;
 
-public class Organizer {
+public class Organizer implements Organizer_Interface{
 	private String name;
 	private UsersTree users;
 	private User actualUser;
