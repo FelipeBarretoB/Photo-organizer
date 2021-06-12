@@ -24,7 +24,6 @@
           <Menu mnemonicParsing="false" text="Folders">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#loadOrganizeFolder" text="Organize" />
-                  <MenuItem mnemonicParsing="false" onAction="#loadCompareFolders" text="Compare" />
             </items>
           </Menu>
         </menus>

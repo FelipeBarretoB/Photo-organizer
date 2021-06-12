@@ -73,69 +73,69 @@ public class PhotoOrganizerGUI {
 	private Label lblUserName;
 
 	@FXML
-    private Label confirmUserIn;//
+	private Label confirmUserIn;//
 
-    @FXML
-    private TextField txtUserCode;
+	@FXML
+	private TextField txtUserCode;
 
-    @FXML
-    private Label labUserNameIn;
+	@FXML
+	private Label labUserNameIn;
 
-    @FXML
-    private Label labUserCodeIn;
-    
-    @FXML
-    private Circle loadCircle1;
-    
-    @FXML
-    private Circle loadCircle2;
+	@FXML
+	private Label labUserCodeIn;
 
-    @FXML
-    private Circle loadCircle3;
+	@FXML
+	private Circle loadCircle1;
 
-    @FXML
-    private Circle loadCircle4;
-    
-    @FXML
-    void loadLoaadingCircle(ActionEvent event) {
-    	load("loading_screen.fxml");
-    	LoadBall b1 = new LoadBall(300,250,325,225);
-    	LoadBall b2 = new LoadBall(325,225,350,200);
-    	LoadBall b3 = new LoadBall(350,200,325,175);
-    	LoadBall b4 = new LoadBall(325,175,300,150);
-    	new BallThread(100, this, b1, b2, b3, b4).start();
-    }
-    
-    public void uploadCircle1(int x, int y) {
-    	loadCircle1.setLayoutX(x);
-    	loadCircle1.setLayoutY(y);
-    }
-    public void uploadCircle2(int x, int y) {
-    	loadCircle2.setLayoutX(x);
-    	loadCircle2.setLayoutY(y);
-    }
-    public void uploadCircle3(int x, int y) {
-    	loadCircle3.setLayoutX(x);
-    	loadCircle3.setLayoutY(y);
-    }
-    public void uploadCircle4(int x, int y) {
-    	loadCircle4.setLayoutX(x);
-    	loadCircle4.setLayoutY(y);
-    }
-    
-    @FXML
-    void searchUserByCode(ActionEvent event) {
-    	if(!txtUserCode.getText().equals("")) {
-    		if(organizer.findUserByCode(txtUserCode.getText()) != null) {
-    			User u = organizer.findUserByCode(txtUserCode.getText());
-    			labUserNameIn.setText(u.getName());
-    			labUserCodeIn.setText(String.valueOf(u.getCode()));
-    		}else {
-    			
-    		}
-    	}
-    }
-    @FXML
+	@FXML
+	private Circle loadCircle2;
+
+	@FXML
+	private Circle loadCircle3;
+
+	@FXML
+	private Circle loadCircle4;
+
+	@FXML
+	public void loadLoaadingCircle(ActionEvent event) {
+		load("loading_screen.fxml");
+		LoadBall b1 = new LoadBall(300,250,325,225);
+		LoadBall b2 = new LoadBall(325,225,350,200);
+		LoadBall b3 = new LoadBall(350,200,325,175);
+		LoadBall b4 = new LoadBall(325,175,300,150);
+		new BallThread(100, this, b1, b2, b3, b4).start();
+	}
+
+	public void uploadCircle1(int x, int y) {
+		loadCircle1.setLayoutX(x);
+		loadCircle1.setLayoutY(y);
+	}
+	public void uploadCircle2(int x, int y) {
+		loadCircle2.setLayoutX(x);
+		loadCircle2.setLayoutY(y);
+	}
+	public void uploadCircle3(int x, int y) {
+		loadCircle3.setLayoutX(x);
+		loadCircle3.setLayoutY(y);
+	}
+	public void uploadCircle4(int x, int y) {
+		loadCircle4.setLayoutX(x);
+		loadCircle4.setLayoutY(y);
+	}
+
+	@FXML
+	public void searchUserByCode(ActionEvent event) {
+		if(!txtUserCode.getText().equals("")) {
+			if(organizer.findUserByCode(txtUserCode.getText()) != null) {
+				User u = organizer.findUserByCode(txtUserCode.getText());
+				labUserNameIn.setText(u.getName());
+				labUserCodeIn.setText(String.valueOf(u.getCode()));
+			}else {
+
+			}
+		}
+	}
+	@FXML
 	private ComboBox<String> cbOrganizedFiles;
 
 	@FXML
@@ -204,7 +204,7 @@ public class PhotoOrganizerGUI {
 			}else {
 				throw new InvalidValuesException();
 			}
-			
+
 		}catch(InvalidValuesException ive) {
 			labConfirmNewUser.setText(ive.getMessage());
 		}
@@ -213,11 +213,11 @@ public class PhotoOrganizerGUI {
 	public void loadMainPage(){
 		load("menu-page.fxml");
 	}
-	
+
 	public void loadSearchUserPage(){
 		load("searchUser-page.fxml");
 	}
-	
+
 	public void loadLoginPage() {
 		try {
 			organizer.loadUsers();
@@ -249,18 +249,12 @@ public class PhotoOrganizerGUI {
 			lblUserName.setText(organizer.getActualUser().getName());
 		}	
 	}
-	@FXML
-	public void loadCustomizePreferences(ActionEvent event) {
-		load("customise-preferences.fxml");
-	}
+
 	@FXML
 	public void backToOrganizeFolder(ActionEvent event) {
 		load("Organize-Folder.fxml");
 	}
-	@FXML
-	public void loadCompareFolders(ActionEvent event) {
-		load("compare-folders.fxml");
-	}
+
 	@FXML
 	public void loadManageFolders(ActionEvent event) {
 		cbOrganizedFiles= new ComboBox<String>();
@@ -301,16 +295,23 @@ public class PhotoOrganizerGUI {
 	//Organize-folder
 	@FXML
 	public void btnLookForFile(ActionEvent event) {
-		DirectoryChooser directoryChooser = new DirectoryChooser();
-		Stage stage=new Stage();
-		File selectedDirectory = directoryChooser.showDialog(stage);
-		txtFilePath.setText(selectedDirectory.getPath());
-		organizer.callImportFile(selectedDirectory);
+		try {
+			DirectoryChooser directoryChooser = new DirectoryChooser();
+			Stage stage=new Stage();
+			File selectedDirectory = directoryChooser.showDialog(stage);
+			txtFilePath.setText(selectedDirectory.getPath());
+			organizer.callImportFile(selectedDirectory);
+		}catch (NullPointerException e) {
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.setTitle("Alerta");
+			alert.setHeaderText("Debe seleccionar un archivo");
+			alert.showAndWait();
+		}
 
 	}
 
 	@FXML
-	void btnOrganize(ActionEvent event) {
+	public void btnOrganize(ActionEvent event) {
 		if(!organizer.checkIfRunning()) {
 			if(cBorganizeOptions.getSelectionModel().getSelectedItem()!="" && organizer.getFiles()!=null) {
 				if(organizer.getActualUser()!=null) {
@@ -330,41 +331,41 @@ public class PhotoOrganizerGUI {
 	@FXML
 	public void cbOrganizedFilesUpdate(ActionEvent event) throws FileNotFoundException {
 		try {
-		txtPhotosNames.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getAllNames());
-		lblName.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getName());
-		lblSize.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getSize());
-		lblnOO.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getNumOfOrga()+"");
-		if(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getCreatedUser()!=null)
-			lblUser.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getName());
-		else
-			lblUser.setText("Anonimo");
+			txtPhotosNames.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getAllNames());
+			lblName.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getName());
+			lblSize.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getSize());
+			lblnOO.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getNumOfOrga()+"");
+			if(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getCreatedUser()!=null)
+				lblUser.setText(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()).getName());
+			else
+				lblUser.setText("Anonimo");
 		}catch (NullPointerException e) {
-		
+
 		}
 	}
-	
-    @FXML
-    void btnRecreateOrga(ActionEvent event) {
-    	
-    	if(cbOrganizedFiles.getSelectionModel().getSelectedItem()!=null) {
-    		try {
+
+	@FXML
+	public void btnRecreateOrga(ActionEvent event) {
+
+		if(cbOrganizedFiles.getSelectionModel().getSelectedItem()!=null) {
+			try {
 				organizer.createFileAgain(organizer.getOrganizedByName(cbOrganizedFiles.getSelectionModel().getSelectedItem()));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-    	}else {
-    		Alert alert = new Alert(AlertType.WARNING);
+		}else {
+			Alert alert = new Alert(AlertType.WARNING);
 			alert.setTitle("Alerta");
 			alert.setHeaderText("Debe seleccionar un archivo");
 			alert.showAndWait();
-    	}
-    }
-    
-    @FXML
-    void btnDeleteOrganized(ActionEvent event) {
-    	try {
-    		
+		}
+	}
+
+	@FXML
+	public void btnDeleteOrganized(ActionEvent event) {
+		try {
+
 			organizer.removeOrganized(cbOrganizedFiles.getSelectionModel().getSelectedItem());
 			txtPhotosNames.setText("");
 			lblName.setText("");
@@ -380,6 +381,6 @@ public class PhotoOrganizerGUI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    }
+	}
 
 }

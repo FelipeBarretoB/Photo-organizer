@@ -11,7 +11,7 @@ public class Photo extends Properties implements Comparable<Photo> {
 	private static final long serialVersionUID = 1L;
 	private Type type;
 	private String resolution;
-	private Photo nextPhoto; //y si ponemos solo next? xd
+	private Photo nextPhoto; 
 	private File file;
 	
 	public Photo(String n, String s,String d, Type t, String r,File file, Photo p) {

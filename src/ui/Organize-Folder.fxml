@@ -13,7 +13,6 @@
       <TextField fx:id="txtFilePath" layoutX="377.0" layoutY="87.0" prefHeight="25.0" prefWidth="153.0" />
       <Label layoutX="78.0" layoutY="137.0" text="Nombre de carpeta organizada:" />
       <Button layoutX="266.0" layoutY="313.0" mnemonicParsing="false" onAction="#btnOrganize" text="Organizar" />
-      <Button layoutX="488.0" layoutY="29.0" mnemonicParsing="false" onAction="#loadCustomizePreferences" text="Personalizar" />
       <Label layoutX="78.0" layoutY="179.0" text="Se organizara por:" />
       <ComboBox fx:id="cBorganizeOptions" layoutX="185.0" layoutY="175.0" prefWidth="150.0" />
       <Label layoutX="260.0" layoutY="91.0" prefHeight="17.0" prefWidth="119.0" text="Carpeta selecionada:" />

@@ -187,9 +187,7 @@ public class Organizer implements Organizer_Interface{
 		return organized;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
+
 
 	public UsersTree getUsers() {
 		return users;
@@ -263,7 +261,7 @@ public class Organizer implements Organizer_Interface{
 
 	private void addFile(Files currentFile,File file) {
 		if(currentFile.getNext()==null) {
-			System.out.println("added: "+file.getName());
+			
 			Date d= new Date(file.lastModified());
 			currentFile.setNext(new Files(file.getName(), ""+file.length(),d.toString(),file ,foldersIn(file),filesIn(file), file.getPath()));
 
@@ -287,7 +285,6 @@ public class Organizer implements Organizer_Interface{
 
 	public void getAllPhotosInArray() {
 		photos=new ArrayList<>();
-		//photos.add(files.getPhoto());
 		getAllPhotosInArray(files.getPhoto(),files);
 	}
 	private void getAllPhotosInArray(Photo nextPhoto,Files nextFile) {
