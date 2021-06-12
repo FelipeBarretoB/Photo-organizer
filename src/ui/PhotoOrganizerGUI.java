@@ -34,6 +34,7 @@ public class PhotoOrganizerGUI {
 
 	public PhotoOrganizerGUI(){
 		organizer = new Organizer("Photo Organizer");
+
 	}
 
 	@FXML
@@ -158,13 +159,13 @@ public class PhotoOrganizerGUI {
 	@FXML
 	public void loginUser(ActionEvent event) {
 		try {
-			System.out.println(organizer.getUsers().size());
+			
 			if(!txtUserName.getText().equals("") && !txtPassword.getText().equals("")) {
 				User loggedUser = organizer.findUser(txtUserName.getText());
 				if(loggedUser != null) {
 					if(loggedUser.getPassword().equals(txtPassword.getText())) {
 						organizer.setActualUser(loggedUser);
-						labConfirmLogin.setText("Logeado correctamente como " + loggedUser.getName());
+						labConfirmLogin.setText("Logeado correctamente como " + loggedUser.getName()+" Codigo: "+loggedUser.getCode());
 					}else {
 						throw new InvalidPasswordException();
 					}
@@ -187,17 +188,22 @@ public class PhotoOrganizerGUI {
 	}
 
 	@FXML
-	public void createUser(ActionEvent event) throws IOException, UserNotFoundException {
+	public void createUser(ActionEvent event) throws IOException {
 		try {
 			if(txtCreateUserName.getText() != null && txtCreatePassword.getText() != null
 					&& txtConfirmPassword.getText() != null) {
 				if(txtConfirmPassword.getText().equals(txtCreatePassword.getText())) {
-					if(organizer.findUser(txtCreateUserName.getText()) == null) {
+					try {
+						if(organizer.findUser(txtCreateUserName.getText()) == null) {
+							organizer.addUser(txtCreateUserName.getText(),txtCreatePassword.getText());
+							loadLoginPage();
+						}else {
+							labConfirmNewUser.setText("El usuario ya existe"); 
+						}
+					} catch (UserNotFoundException e) {
 						organizer.addUser(txtCreateUserName.getText(),txtCreatePassword.getText());
 						loadLoginPage();
-					}else {
-						labConfirmNewUser.setText("El usuario ya existe"); 
-					}
+					} catch (IOException e) {}
 				}else {
 					labConfirmNewUser.setText("Las contraseñas no coinciden");
 				}

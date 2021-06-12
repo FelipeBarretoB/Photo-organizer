@@ -85,7 +85,6 @@ public class Organizer implements Organizer_Interface{
 			String[] parts= line.split(",");
 			users.add(new User(parts[0],parts[1],Integer.parseInt(parts[2])));
 			usersList.add(new User(parts[0],parts[1],Integer.parseInt(parts[2])));
-			System.out.println(usersList.size());
 			selectionSort(usersList);
 			line=br.readLine();
 			
@@ -154,15 +153,10 @@ public class Organizer implements Organizer_Interface{
 		users.add(user);
 		selectionSort(usersList);
 		saveUsers(n,p,c);
-		printUsers();
+	
 	}//git commit -m "busqueda binaaria 2"
 	
-	public void printUsers() {
-		for(int i = 0; i < usersList.size(); i++) {
-			System.out.println(usersList.get(i).getCode());
-			System.out.println(usersList.size());
-		}
-	}
+
 	
 	public String randomCode() {
 		String box = "123456789";
